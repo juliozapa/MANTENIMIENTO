@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mantenimiento</title>
+<meta name="theme-color" content="#1C2541">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mantenimiento">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@700;800;900&family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--oscuro:#1C2541;--verde:#1B6E9A;--vivo:#44A02C;--verde2:#EAF6FC;--rosa:#EE7A86;--fondo:#F6F8FA;--texto:#1E2A33;--gris:#5B6B77;--borde:#DCE3E8;--azul:#1B6E9A;--azul2:#EAF6FC;--ambar:#9a6512;--ambar2:#FDF1DC;--rojo:#D64550;--rojo2:#FCE6E8;--serif:"Young Serif",Georgia,serif}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Manrope",system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:var(--fondo);color:var(--texto);font-size:14px}
+header{background:#fff;color:var(--texto);padding:0 20px;display:flex;align-items:center;gap:24px;height:56px;position:sticky;top:0;z-index:5;border-bottom:1px solid var(--borde)}
+.logo{height:32px;width:auto;display:block}
+header h1{font-family:"Manrope";font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--verde);margin:0;white-space:nowrap;display:flex;align-items:center;gap:12px}
+header nav{display:flex;gap:4px;height:100%}
+header nav button{background:none;border:0;color:var(--gris);font-weight:700;font-size:15px;padding:0 14px;border-bottom:3px solid transparent;cursor:pointer;font-family:inherit}
+header nav button.on{color:var(--texto);border-color:var(--vivo)}
+header .der{margin-left:auto;display:flex;gap:16px;align-items:center;font-size:13px}
+header a{color:var(--verde);font-weight:700}
+header #lnkRep{background:var(--verde);color:#fff;font-size:15px;font-weight:800;padding:11px 20px;border-radius:99px;text-decoration:none;box-shadow:0 2px 8px rgba(20,92,69,.25);white-space:nowrap}
+.wrap{display:grid;grid-template-columns:400px 1fr;height:calc(100vh - 56px)}
+.izq{border-right:1px solid var(--borde);display:flex;flex-direction:column;min-height:0;background:#fff}
+.filtros{padding:12px;border-bottom:1px solid var(--borde);display:flex;flex-direction:column;gap:8px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px}
+.fchip{border:1.5px solid var(--borde);background:#fff;border-radius:99px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--texto)}
+.fchip.on{background:var(--oscuro);border-color:var(--oscuro);color:#fff}
+.fchip .c{opacity:.75;margin-left:3px}
+.fsel{display:flex;gap:6px}
+select,textarea{font-family:inherit;font-size:14px;border:1.5px solid var(--borde);border-radius:12px;padding:7px 8px;background:#fff;color:var(--texto)}
+.fsel select{flex:1;min-width:0}
+.facc{display:flex;gap:6px}
+.facc button{flex:1;border:1px solid var(--borde);background:#fff;border-radius:10px;padding:8px 6px;font:inherit;font-size:13px;font-weight:700;color:var(--texto);cursor:pointer}
+.facc button:hover{border-color:var(--medio)}
+.bdel{color:#B3261E;border-color:#F0C7C3}
+.bimp{display:block;width:100%;margin-top:8px;border:1px solid var(--borde);background:#fff;border-radius:12px;padding:10px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.lista{overflow-y:auto;flex:1}
+.card{display:flex;gap:12px;padding:12px;border-bottom:1px solid var(--borde);cursor:pointer;border-left:4px solid transparent}
+.card:hover{background:#f8fbf9}
+.card.sel{background:var(--verde2);border-left-color:var(--vivo)}
+.card.rojo{background:#FDECEC;border-left:6px solid #D93025}
+.card.amar{background:#FFF6D6;border-left:6px solid #E8A800}
+.card.rojo:hover{background:#FADADA}.card.amar:hover{background:#FDEFC0}
+.card.sel.rojo,.card.sel.amar{box-shadow:inset 0 0 0 2px var(--vivo)}
+.card img,.card .ph{width:72px;height:72px;border-radius:14px;object-fit:cover;flex:none;background:var(--verde2)}
+.card .t{font-weight:800;font-size:15px;line-height:1.25}
+.card .m{color:var(--gris);font-size:12.5px;margin-top:3px}
+.bdg{display:inline-block;font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:99px;margin:6px 4px 0 0;white-space:nowrap}
+.b-warn{background:var(--ambar2);color:var(--ambar)}.b-info{background:var(--azul2);color:var(--azul)}.b-ok{background:var(--verde2);color:var(--verde)}.b-bad{background:var(--rojo2);color:var(--rojo)}.b-gris{background:#eee;color:#666}
+.dcha{overflow-y:auto;padding:24px}
+.det{max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr 330px;grid-template-areas:"foto panel" "info panel";grid-template-rows:auto 1fr;gap:0 24px;align-items:start}
+.dfoto{grid-area:foto}.dinfo{grid-area:info}.det .lado{grid-area:panel;display:flex;flex-direction:column;gap:16px;min-width:0}
+.det .lado .panel{position:static}
+
+.volver{display:none}
+.det .foto{background:var(--oscuro);border-radius:20px;overflow:hidden;min-height:240px;display:flex;align-items:center;justify-content:center}
+.det .foto img{width:100%;display:block;max-height:520px;object-fit:contain}
+.det h2{margin:16px 0 6px;font-size:23px;font-family:var(--serif);font-weight:400}
+.datos{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin-top:12px}
+.datos dt{color:var(--gris)}.datos dd{margin:0}
+.aviso{background:var(--ambar2);color:#7a4f0e;border-radius:16px;padding:10px 12px;margin-top:14px}
+.aviso ul{margin:6px 0 0;padding-left:18px}
+.panel{background:#fff;border:1px solid var(--borde);border-radius:20px;padding:16px;position:sticky;top:0}
+.panel h3{margin:0 0 12px;font-size:20px;font-family:var(--serif);font-weight:400}
+.panel label{display:block;font-weight:600;font-size:13px;margin:12px 0 5px}
+.panel select,.panel textarea{width:100%}
+.panel select.plazo{font-size:15px;font-weight:700;padding:11px;border:2px solid var(--vivo);background:var(--verde2)}
+.panel textarea{min-height:70px}
+.panel .lim{font-size:13px;color:var(--gris);margin-top:5px}
+.btn{border:0;border-radius:99px;background:var(--vivo);color:var(--oscuro);font-size:15px;font-weight:800;padding:11px 14px;cursor:pointer;font-family:inherit;width:100%;margin-top:10px}
+.btn.sec{background:var(--oscuro);color:#fff;border:0}
+.btn:disabled{opacity:.5;cursor:default}
+.ro{background:var(--azul2);color:var(--azul);padding:8px 10px;border-radius:8px;font-size:13px}
+.vacio{color:var(--gris);text-align:center;padding:60px 20px}
+.mini-file{font-size:13px;color:var(--verde);cursor:pointer;text-decoration:underline;display:inline-block;margin-top:10px}
+input[type=file]{display:none}
+/* Contactos: quién lo arregla */
+.quien{margin-top:18px}
+.quien h3{margin:0 0 4px;font-size:20px;font-family:var(--serif);font-weight:400}
+.quien .sub{color:var(--gris);font-size:13px;margin-bottom:10px}
+.ccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.cc{background:#fff;border:1.5px solid var(--borde);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.cc.asig{border-color:var(--vivo);box-shadow:0 0 0 3px var(--verde2)}
+.cc .top{display:flex;gap:11px;align-items:center}
+.cc .av{width:44px;height:44px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;background:var(--verde2);color:var(--verde)}
+.cc.ext .av{background:var(--azul2);color:var(--azul)}
+.cc .nm{font-weight:800;font-size:15px;line-height:1.2}
+.cc .em{color:var(--gris);font-size:12.5px;margin-top:2px}
+.cc .tag{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:var(--verde2);color:var(--verde);margin-left:auto;align-self:flex-start}
+.cc.ext .tag{background:var(--azul2);color:var(--azul)}
+.cc .dat{font-size:13px;color:var(--texto);display:flex;flex-direction:column;gap:3px;word-break:break-all}
+.cc .dat .no{color:var(--gris);font-style:italic}
+.cc .acc{display:flex;gap:6px;flex-wrap:wrap}
+.cc .acc a,.cc .acc button{flex:1;min-width:0;text-align:center;text-decoration:none;font-family:inherit;font-size:13px;font-weight:800;padding:9px 6px;border-radius:12px;border:0;cursor:pointer;background:var(--verde2);color:var(--verde);white-space:nowrap}
+.cc .acc .wa{background:#E3F7EA;color:#128C4A}
+.cc .acc .asg{background:var(--oscuro);color:#fff}
+.cc.asig .acc .asg{background:var(--vivo);color:var(--oscuro)}
+.cc .acc .off{opacity:.35;pointer-events:none}
+.cc .nt{font-size:12px;color:var(--gris)}
+.cc .ed{border:0;background:none;cursor:pointer;font-size:15px;padding:2px 4px;margin-left:2px;align-self:flex-start;opacity:.7}
+.cc .ed:hover{opacity:1}
+.cc.nuevo{border-style:dashed;align-items:center;justify-content:center;cursor:pointer;color:var(--verde);font-weight:800;min-height:120px;background:transparent;font-family:inherit;font-size:15px}
+.cc.nuevo:hover{background:var(--verde2)}
+dialog.dlg{border:0;border-radius:22px;padding:0;width:min(520px,94vw);max-height:92vh;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog.dlg::backdrop{background:rgba(10,30,20,.45)}
+.dlg form{padding:20px;display:flex;flex-direction:column;gap:11px;overflow:auto;max-height:92vh}
+.dlg h3{margin:0;font-family:var(--serif);font-weight:400;font-size:22px}
+.dlg label{font-size:12.5px;font-weight:800;color:var(--gris);display:flex;flex-direction:column;gap:4px}
+.dlg input[type=text],.dlg input[type=tel],.dlg input[type=email]{font-family:inherit;font-size:15px;border:1.5px solid var(--borde);border-radius:12px;padding:9px 10px;color:var(--texto)}
+.dlg .chips{display:flex;flex-wrap:wrap;gap:6px}
+.dlg .chips label{flex-direction:row;align-items:center;gap:5px;font-weight:700;color:var(--texto);background:#f3f5f4;border-radius:99px;padding:6px 11px;cursor:pointer;font-size:13px}
+.dlg .chips input{accent-color:var(--verde)}
+.dlg .chips label:has(input:checked){background:var(--verde2);color:var(--verde)}
+.dlg .seg{display:flex;gap:6px}
+.dlg .seg label{flex:1;flex-direction:row;justify-content:center;gap:6px;border:1.5px solid var(--borde);border-radius:12px;padding:9px;cursor:pointer;color:var(--texto)}
+.dlg .seg label:has(input:checked){border-color:var(--verde);background:var(--verde2);color:var(--verde)}
+.dlg .pie{display:flex;gap:8px;align-items:center;margin-top:6px}
+.dlg .pie .borrar{margin-right:auto;background:none;border:0;color:#B3261E;font-weight:800;font-family:inherit;cursor:pointer;font-size:14px}
+.cc .tps{display:flex;flex-wrap:wrap;gap:4px}
+.cc .tps span{font-size:11.5px;font-weight:700;background:#f3f5f4;border-radius:99px;padding:3px 8px;color:var(--texto)}
+.cfil{display:flex;gap:8px;flex-wrap:wrap;margin:-4px 0 14px}
+.cfil input{flex:1;min-width:180px;font-family:inherit;font-size:15px;border:1.5px solid var(--borde);border-radius:12px;padding:8px 11px}
+.dtop .btn{margin-left:auto;width:auto;margin-top:0;padding:10px 18px}
+.quien.mini{margin:0;background:#fff;border:1px solid var(--borde);border-radius:20px;padding:14px}
+.quien.mini h3{font-size:18px}
+.quien.mini .sub{font-size:12px;margin-bottom:8px}
+.quien.mini .ccards{grid-template-columns:minmax(0,1fr);gap:7px}
+.quien.mini{min-width:0;overflow:hidden}
+.cc.mini .acc .asg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc.mini{padding:9px 10px;gap:7px;border-radius:14px}
+.cc.mini .top{gap:8px}
+.cc.mini .av{width:30px;height:30px;font-size:12px}
+.cc.mini .nm{font-size:13.5px}
+.cc.mini .em{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc.mini .tag{display:none}
+.cc.mini .acc{gap:5px}
+.cc.mini .acc a,.cc.mini .acc button{font-size:12px;padding:6px 4px;border-radius:9px}
+.cc.mini .acc a{flex:1;font-size:14px;padding:5px 0}
+.cc.mini .acc .asg{flex:1}
+.cc.mini .ed{font-size:13px}
+.cc.nuevo.mini{min-height:0;padding:9px;font-size:13px}
+.quien.mini .vertodos{font-size:12px;padding:6px 0 0}
+.vertodos{background:none;border:0;color:var(--verde);font-weight:700;font-family:inherit;font-size:13px;cursor:pointer;padding:8px 0;text-decoration:underline}
+/* Datos */
+.datosv{padding:24px;overflow-y:auto;height:calc(100vh - 56px)}
+.dcont{max-width:1150px;margin:0 auto}
+.dtop{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.dtop h2{margin:0;font-size:26px;font-family:var(--serif);font-weight:400}
+.dtop select{margin-left:auto}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--borde);border-radius:18px;padding:16px}
+.kpi .v{font-size:30px;font-family:var(--serif);font-weight:400;margin-top:4px}
+.kpi .l{color:var(--gris);font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.kpi .s{color:var(--gris);font-size:12px;margin-top:2px}
+.hall{background:var(--verde2);color:var(--texto);border-radius:20px;padding:18px 22px;margin-bottom:16px}
+.hall li::marker{color:var(--verde)}.hall b{color:var(--verde)}
+.hall h3{margin:0 0 8px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--verde)}.hall ul{margin:0;padding-left:18px;line-height:1.7}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px}
+.box{background:#fff;border:1px solid var(--borde);border-radius:18px;padding:18px}
+.box h3{margin:0 0 14px;font-size:17px;font-family:var(--serif);font-weight:400}
+.bar{display:grid;grid-template-columns:150px 1fr 34px;gap:8px;align-items:center;margin-bottom:7px;font-size:13px}
+.bar .lb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .tr{background:var(--verde2);border-radius:99px;height:12px;overflow:hidden}
+.bar .fl{background:linear-gradient(90deg,var(--verde),var(--vivo));height:100%;border-radius:99px}
+.bar .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--gris);font-weight:600;border-bottom:1px solid var(--borde);padding:6px 4px}
+td{border-bottom:1px solid #eef3f0;padding:7px 4px}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.cols{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:10px}
+.cols .c{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;font-size:12px}
+.cols .c i{display:block;width:100%;max-width:46px;background:linear-gradient(180deg,var(--vivo),var(--verde));border-radius:10px 10px 4px 4px}
+.cols .c span{color:var(--gris)}
+@media (max-width:900px){
+  header{flex-wrap:wrap;height:auto;padding:0 12px;gap:0}
+  header h1{font-size:11px;padding:10px 0;flex:1;gap:10px}
+  .logo{height:30px}
+  header .der{margin:0;font-size:13px;gap:12px}
+  header .der #yo,header .der #lnkHoja{display:none}
+  header .der #lnkRep{padding:12px 18px;font-size:16px}
+  header nav{order:3;width:100%;height:44px}
+  header nav button{flex:1;padding:0 6px}
+  html,body{overflow-x:clip}
+  .wrap{grid-template-columns:minmax(0,1fr);height:auto}
+  .izq,.dcha,.det>*{min-width:0}
+  .izq{border-right:0}
+  .filtros{position:sticky;top:85px;z-index:3;background:#fff}
+  .card .bdg{white-space:normal}
+  .fchips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -12px;padding:0 12px}
+  .fchips::-webkit-scrollbar{display:none}
+  .fchip{padding:9px 13px;font-size:14px;flex:none}
+  .lista{overflow:visible}
+  .card{padding:12px 12px 12px 8px}
+  .card img,.card .ph{width:64px;height:64px}
+  .dcha{display:none;padding:12px 12px 40px;overflow:visible}
+  .wrap.vdet .izq{display:none}.wrap.vdet .dcha{display:block}
+  .volver{display:block;background:none;border:0;color:var(--verde);font-size:16px;font-weight:600;padding:6px 0 12px;font-family:inherit;cursor:pointer}
+  .det{grid-template-columns:1fr;grid-template-areas:"foto" "panel" "info";gap:14px}
+  .det .lado{display:flex}
+  .det h2{font-size:19px;margin-top:12px}
+  .det .foto{min-height:180px}
+  .det .foto img{max-height:340px}
+  .panel{position:static}
+  .btn{padding:14px;font-size:16px}
+  select,textarea{font-size:16px}
+  .panel select.plazo{padding:12px}
+  .datosv{padding:12px;height:auto}
+  .dtop{flex-wrap:wrap}
+  .kpis{grid-template-columns:repeat(2,1fr);gap:8px}
+  .kpi{padding:12px}.kpi .v{font-size:22px}
+  .g3,.g2{grid-template-columns:1fr;gap:12px;margin-bottom:12px}
+  .box{overflow-x:auto}
+  .bar{grid-template-columns:120px 1fr 30px}
+}
+
+/* App: avisos e inicio de sesión */
+.avisos{display:flex;align-items:center;gap:10px;background:#EAF4FB;color:#1F4E6B;padding:10px 16px;font-size:13.5px;font-weight:600;line-height:1.35}
+.avisos span{flex:1}
+.avisos .on{border:0;background:#2A8FD0;color:#fff;border-radius:99px;padding:8px 14px;font-weight:800;font-family:inherit;font-size:13.5px;cursor:pointer}
+.avisos .x{border:0;background:none;color:inherit;font-size:16px;padding:4px 2px;cursor:pointer}
+.login{max-width:380px;margin:36px auto;text-align:center;background:#fff;border:1px solid var(--borde);border-radius:20px;padding:28px 20px}
+.login-logo{width:230px;max-width:85%}
+.login h2{font-family:var(--serif);font-weight:400;font-size:24px;margin:16px 0 6px}
+.login p{color:#4A5F57;font-size:14px;line-height:1.5;margin:0}
+#gbtn{display:flex;justify-content:center;margin-top:18px;min-height:44px}
+.salir{border:0;background:none;color:inherit;font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;opacity:.7;padding:0;margin-left:auto}
+.err{background:#FCE6E8;color:#D64550;padding:12px;border-radius:12px;margin-top:12px;font-weight:600}
+/* Escritorio: todo el detalle en una pantalla (foto+datos | valoración | quién lo arregla) */
+@media (min-width:901px){
+  .dcha{padding:16px 18px}
+  .det .foto{min-height:170px}
+  .det .foto img{max-height:max(220px, calc(100vh - 360px))}
+  .det h2{font-size:20px;margin:12px 0 4px}
+  .datos{gap:3px 12px;margin-top:8px;font-size:13.5px}
+  .aviso{padding:8px 10px;margin-top:10px;font-size:13px}
+  .panel{padding:14px}
+  .panel h3{font-size:18px;margin-bottom:6px}
+  .panel label{margin:9px 0 4px}
+  .panel select.plazo{padding:8px}
+  .panel textarea{min-height:52px}
+  .panel .btn{margin-top:8px}
+}
+@media (min-width:901px) and (max-width:1440px){.wrap{grid-template-columns:320px 1fr}}
+@media (min-width:1080px){
+  .det{max-width:1200px;grid-template-columns:minmax(220px,1fr) 496px;gap:0 18px}
+  .det .lado{display:grid;grid-template-columns:268px 212px;gap:16px;align-items:start}
+}
+
+/* ===== Marca EDUCAGABIROL (styles/tokens.css): marino uniforme, azul y verde del logo ===== */
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+h1,h2,h3{font-family:'Nunito Sans','Inter',sans-serif}
+.wordmark{font-family:'Zilla Slab','Rockwell',Georgia,serif;line-height:.95;letter-spacing:.02em;color:#fff;text-align:left}
+.wordmark .ibn{display:block;font-size:1.9rem;font-weight:700}
+.wordmark .gab{display:block;font-size:.8rem;font-weight:700;letter-spacing:.08em}
+.lema{font-family:'Zilla Slab',Georgia,serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem;opacity:.75;margin-top:18px!important}
+.login{background:#1C2541!important;color:#fff!important;border:0!important;box-shadow:0 1px 2px rgb(15 61 87/.06),0 4px 12px rgb(15 61 87/.12)}
+.login .top-l{display:flex;align-items:center;justify-content:center;gap:12px}
+.login .top-l img{height:48px}
+.login h2{font-family:'Nunito Sans',sans-serif!important;font-weight:800!important;color:#fff}
+.login p{color:#C9D2E4!important}
+.avisos{background:#EAF6FC;color:#0F3D57}
+.avisos .on{background:#1B6E9A}
+
+header{background:#1C2541;color:#fff;border-bottom:0}
+header h1{color:#fff;font-family:'Nunito Sans',sans-serif;font-weight:800;letter-spacing:.12em}
+header nav button{color:#B9C3DA}
+header nav button.on{color:#fff;border-color:#44A02C}
+header .der,header .der #yo{color:#C9D2E4}
+header a{color:#7CC6EA}
+header #lnkRep{background:#fff;color:#1C2541;box-shadow:none}
+.salir{color:#C9D2E4}
+.det h2,.panel h3,.quien h3{font-family:'Nunito Sans',sans-serif;font-weight:800}
+.btn{background:#1B6E9A;color:#fff}
+.btn.sec{background:#fff;color:#1B6E9A;border:1.5px solid #1B6E9A}
+.fchip.on{background:#1C2541;border-color:#1C2541;color:#fff}
+@media (max-width:900px){header nav{background:#1C2541}}
+</style>
+</head>
+<body>
+<header>
+  <h1><img class="logo" src="logo-blanco.png" alt="Colegio Ibn Gabirol">Mantenimiento</h1>
+  <nav><button id="nInc" class="on" onclick="vista('inc')">Incidencias</button><button id="nCon" onclick="vista('con')">Contactos</button><button id="nDat" onclick="vista('dat')">Datos y control</button></nav>
+  <div class="der"><span id="yo"></span><a id="lnkRep" href="#" hidden>📷 Reportar</a><a id="lnkHoja" href="#" hidden target="_blank">Hoja de datos</a><button class="salir" id="bSalir" hidden onclick="salir()">Salir</button></div>
+</header>
+<div id="avisos" class="avisos" hidden></div>
+<div id="vInc" class="wrap">
+  <div class="izq">
+    <div class="filtros">
+      <div class="fchips" id="fEstado"></div>
+      <div class="fsel"><select id="fZona" onchange="M.zona=this.value;pintarLista()"></select><select id="fTipo" onchange="M.tipo=this.value;pintarLista()"></select></div>
+      <div class="fsel"><select id="fUrg" onchange="M.urg=this.value;pintarLista()"><option value="">Todas las urgencias</option><option value="2">🔴 Seguridad</option><option value="1">🟡 Funcionamiento</option></select><select id="fPers" onchange="M.pers=this.value;pintarLista()"></select></div>
+      <div class="facc"><button onclick="imprimirListado()">🖨 Imprimir listado</button><button onclick="imprimirPorPersona()">👷 Imprimir por persona</button><button onclick="descargarListado()">⬇ Excel</button></div>
+    </div>
+    <div class="lista" id="lista"><div class="vacio">Cargando…</div></div>
+  </div>
+  <div class="dcha" id="detalle"><div class="vacio">Selecciona una incidencia de la izquierda.</div></div>
+</div>
+<div id="vCon" class="datosv" hidden></div>
+<div id="vDat" class="datosv" hidden></div>
+<input type="file" id="fDesp" accept="image/*" capture="environment" onchange="fotoDespues(this)">
+
+<script src="app.js?v=23"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const M = { init: null, list: [], filtro: 'Nueva', zona: '', tipo: '', pers: '', urg: '', sel: null, dirty: {}, fotos: {}, periodo: 'curso', guardando: false };
+const H = 36e5, D = 864e5;
+
+const call = api;
+
+async function arrancar() {
+  try { [M.init, M.list] = await Promise.all([call('getInit'), call('listarIncidencias')]); }
+  catch (e) {
+    if (e instanceof LoginNeeded) { $('header nav').hidden = true; $('#vInc').className = ''; $('#vInc').innerHTML = '<div id="lg" style="padding:0 16px"></div>'; return pantallaLogin($('#lg')); }
+    $('#lista').innerHTML = '<div class="vacio">' + esc(e.message || e) + '</div>'; return;
+  }
+  const I = M.init, u = I.user;
+  $('#yo').textContent = u.nombre + (u.edita ? '' : ' · solo lectura');
+  { const a = $('#lnkRep'); a.hidden = false; a.href = 'index.html?rep=1'; }
+  $('#bSalir').hidden = MOCK_MODE;
+  barraAvisos();
+  if (I.hoja) { const a = $('#lnkHoja'); a.hidden = false; a.href = I.hoja; }
+  $('#fZona').innerHTML = '<option value="">Todas las zonas</option>' + I.zonas.map(z => `<option>${esc(z.zona)}</option>`).join('');
+  $('#fTipo').innerHTML = '<option value="">Todos los tipos</option>' + I.tipos.map(t => `<option value="${esc(t.nombre)}">${esc(t.icono + ' ' + t.nombre)}</option>`).join('');
+  const p = params();
+  if (p.id && M.list.some(o => o.ID === p.id)) { M.filtro = 'Todas'; M.sel = p.id; }
+  pintarLista();
+  if (M.sel) pintarDetalle();
+  setInterval(refrescar, 120000);
+}
+async function refrescar() {
+  if (M.guardando || Object.keys(M.dirty).length) return;
+  try { M.list = await call('listarIncidencias'); pintarLista(); } catch (e) {}
+}
+
+function vista(v) {
+  ['inc', 'con', 'dat'].forEach(x => {
+    $('#n' + x[0].toUpperCase() + x.slice(1)).classList.toggle('on', v === x);
+    $('#v' + x[0].toUpperCase() + x.slice(1)).hidden = v !== x;
+  });
+  if (v === 'dat') pintarDatos();
+  if (v === 'con') pintarContactos();
+}
+
+/* ---------- Utilidades ---------- */
+const t = iso => iso ? new Date(iso).getTime() : NaN;
+// Estados: el valor guardado en la Hoja y el nombre que se ve
+const ESPERA = 'Esperando materiales/MO';
+const ESTADOS_UI = [['Nueva', 'Pendiente'], ['En curso', 'En proceso'], [ESPERA, 'Esperando materiales / MO'], ['Resuelta', 'Resuelta'], ['Descartada', 'Descartada']];
+const estNombre = e => (ESTADOS_UI.find(x => x[0] === e) || [e, e])[1];
+const abierta = o => o.Estado === 'Nueva' || o.Estado === 'En curso' || o.Estado === ESPERA;
+const vencida = o => (o.Estado === 'En curso' || o.Estado === ESPERA) && o.FechaLimite && t(o.FechaLimite) < Date.now();
+const impIdx = o => Math.max(0, M.init.impactos.indexOf(o.Impacto));
+// Urgencia que rompe la cadena de tiempo: 2 = 🔴 seguridad, 1 = 🟡 funcionamiento, 0 = normal
+function urg(o) {
+  if (/^🔴/.test(o.Plazo || '') || /seguridad/i.test(o.Impacto)) return 2;
+  if (/^🟡/.test(o.Plazo || '') || /impide/i.test(o.Impacto)) return 1;
+  return 0;
+}
+const icono = tipo => (M.init.tipos.find(x => x.nombre === tipo) || {}).icono || '🔧';
+function dur(h) {
+  h = Math.abs(h);
+  if (h < 1) return Math.max(1, Math.round(h * 60)) + ' min';
+  if (h < 48) return Math.round(h) + ' h';
+  return Math.round(h / 24) + ' días';
+}
+const hace = iso => 'hace ' + dur((Date.now() - t(iso)) / H);
+function fecha(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' }) + ' ' + d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
+function semaforo(o) {
+  if (o.Estado === 'Resuelta') return ['b-ok', '✓ Resuelta' + (o.HorasResolucion !== '' && o.HorasResolucion != null ? ' en ' + dur(+o.HorasResolucion) : '')];
+  if (o.Estado === 'Descartada') return ['b-gris', 'Descartada'];
+  if (o.Estado === 'Nueva') return ['b-warn', 'Pendiente · ' + hace(o.Fecha)];
+  if (o.Estado === ESPERA) return [vencida(o) ? 'b-bad' : 'b-warn', '📦 Esperando materiales / MO' + (o.FechaLimite ? (vencida(o) ? ' · vencida' : ' · vence en ' + dur((t(o.FechaLimite) - Date.now()) / H)) : '')];
+  if (o.FechaLimite) {
+    const d = (t(o.FechaLimite) - Date.now()) / H;
+    return d < 0 ? ['b-bad', 'Vencida hace ' + dur(d)] : [d < 12 ? 'b-warn' : 'b-info', 'Vence en ' + dur(d)];
+  }
+  return ['b-info', o.Plazo || 'En proceso'];
+}
+function impBadge(o) { return ['b-gris', 'b-warn', 'b-bad'][Math.min(impIdx(o), 2)]; }
+function repes(o, dias) {
+  const lim = Date.now() - (dias || 90) * D;
+  return M.list.filter(x => x.ID !== o.ID && x.Espacio === o.Espacio && x.Tipo === o.Tipo && t(x.Fecha) >= lim);
+}
+
+/* ---------- Lista ---------- */
+const FILTROS = [['Nueva', 'Pendiente', o => o.Estado === 'Nueva'], ['En curso', 'En proceso', o => o.Estado === 'En curso'], ['Espera', 'Esperando mat./MO', o => o.Estado === ESPERA], ['Vencidas', 'Vencidas', vencida], ['Resuelta', 'Resueltas', o => o.Estado === 'Resuelta'], ['Todas', 'Todas', () => true]];
+function baseFiltrada() {
+  return M.list.filter(o => (!M.zona || o.Zona === M.zona) && (!M.tipo || o.Tipo === M.tipo)
+    && (!M.pers || (M.pers === '—' ? !o.Asignado : o.Asignado === M.pers))
+    && (!M.urg || urg(o) === +M.urg));
+}
+function listaActual() {
+  const l = baseFiltrada().filter(FILTROS.find(f => f[0] === M.filtro)[2]);
+  if (M.filtro === 'Resuelta') l.sort((a, b) => t(b.FechaResolucion) - t(a.FechaResolucion));
+  else l.sort((a, b) => (abierta(b) - abierta(a)) || (abierta(a) && (urg(b) - urg(a))) || (vencida(b) - vencida(a)) || (impIdx(b) - impIdx(a)) || (t(a.Fecha) - t(b.Fecha)));
+  return l;
+}
+// Personas a las que se puede asignar: contactos + nombres ya asignados
+function personas() {
+  const n = (M.init.contactos || []).map(c => c.nombre);
+  M.list.forEach(o => { if (o.Asignado && !n.includes(o.Asignado)) n.push(o.Asignado); });
+  return n.sort((a, b) => a.localeCompare(b, 'es'));
+}
+function pintarFiltroPersona() {
+  const ps = personas();
+  if (M.pers && M.pers !== '—' && !ps.includes(M.pers)) M.pers = '';
+  $('#fPers').innerHTML = `<option value="">👷 Todas las personas</option><option value="—" ${M.pers === '—' ? 'selected' : ''}>Sin asignar</option>`
+    + ps.map(n => `<option ${n === M.pers ? 'selected' : ''}>${esc(n)}</option>`).join('');
+}
+function pintarLista() {
+  pintarFiltroPersona();
+  const base = baseFiltrada();
+  $('#fEstado').innerHTML = FILTROS.map(f => `<button class="fchip${M.filtro === f[0] ? ' on' : ''}" onclick="M.filtro='${f[0]}';pintarLista()">${f[1]}<span class="c">${base.filter(f[2]).length}</span></button>`).join('');
+  const l = listaActual();
+  $('#lista').innerHTML = l.length ? l.map(o => {
+    const s = semaforo(o), r = repes(o).length;
+    const u = abierta(o) ? urg(o) : 0;
+    return `<div class="card${o.ID === M.sel ? ' sel' : ''}${u === 2 ? ' rojo' : u === 1 ? ' amar' : ''}" onclick="elegir('${esc(o.ID)}')">
+      ${o.Miniatura ? `<img src="${o.Miniatura}" alt="">` : '<div class="ph"></div>'}
+      <div style="min-width:0"><div class="t">${u === 2 ? '🔴 ' : u === 1 ? '🟡 ' : ''}${icono(o.Tipo)} ${esc(o.Espacio)}</div>
+      <div class="m">${esc(o.Tipo)} · ${esc(o.Reporta)} · ${hace(o.Fecha)}</div>
+      <span class="bdg ${impBadge(o)}">${esc(o.Impacto)}</span><span class="bdg ${s[0]}">${esc(s[1])}</span>${r ? `<span class="bdg b-bad">↻ ${r + 1} en 90 días</span>` : ''}${o.Asignado ? `<span class="bdg b-info">👷 ${esc(o.Asignado)}</span>` : ''}</div></div>`;
+  }).join('') : '<div class="vacio">No hay incidencias aquí. 🎉</div>';
+}
+function elegir(id) {
+  if (Object.keys(M.dirty).length && !confirm('Hay cambios sin guardar. ¿Descartarlos?')) return;
+  M.sel = id; M.dirty = {};
+  pintarLista(); pintarDetalle();
+  $('#vInc').classList.add('vdet');
+  window.scrollTo(0, 0); $('#detalle').scrollTop = 0;
+}
+function volver() {
+  if (Object.keys(M.dirty).length && !confirm('Hay cambios sin guardar. ¿Descartarlos?')) return;
+  M.dirty = {};
+  $('#vInc').classList.remove('vdet');
+  const c = document.querySelector('.card.sel');
+  if (c) c.scrollIntoView({ block: 'center' });
+}
+
+/* ---------- Detalle ---------- */
+function pintarDetalle() {
+  const o = M.list.find(x => x.ID === M.sel);
+  if (!o) { $('#detalle').innerHTML = '<div class="vacio">Selecciona una incidencia de la izquierda.</div>'; return; }
+  const I = M.init, ed = I.user.edita, rp = repes(o), d = M.dirty;
+  const plazo = d.plazo !== undefined ? d.plazo : o.Plazo;
+  const estado = d.estado || o.Estado;
+  const asig = d.asignado !== undefined ? d.asignado : (o.Asignado || '');
+  const ph = I.plazos.find(p => p.nombre === plazo);
+  const limTxt = d.plazo !== undefined
+    ? (ph && ph.horas ? 'Fecha límite: ' + fecha(new Date(Date.now() + ph.horas * H).toISOString()) : ph ? 'Sin fecha límite' : '')
+    : (o.FechaLimite ? 'Fecha límite: ' + fecha(o.FechaLimite) : '');
+  $('#detalle').innerHTML = `<button class="volver" onclick="volver()">← Volver a la lista</button><div class="det">
+    <div class="dfoto">
+      <div class="foto"><img id="imgFull" src="${M.fotos[o.FotoID] || o.Miniatura || ''}" alt="Foto"></div>
+      <h2>${icono(o.Tipo)} ${esc(o.Tipo)} · ${esc(o.Espacio)}</h2>
+      <span class="bdg ${impBadge(o)}">${esc(o.Impacto)}</span><span class="bdg ${semaforo(o)[0]}">${esc(semaforo(o)[1])}</span>
+    </div>
+    <div class="dinfo">
+      <dl class="datos">
+        <dt>Nº</dt><dd>${esc(o.ID)}</dd>
+        <dt>Zona</dt><dd>${esc(o.Zona)}</dd>
+        <dt>Reporta</dt><dd>${esc(o.Reporta)} · ${fecha(o.Fecha)}</dd>
+        ${o.Nota ? `<dt>Nota</dt><dd>${esc(o.Nota)}</dd>` : ''}
+        ${o.FechaValoracion ? `<dt>Valorada</dt><dd>${fecha(o.FechaValoracion)} (a las ${dur((t(o.FechaValoracion) - t(o.Fecha)) / H)})</dd>` : ''}
+        ${o.FechaResolucion ? `<dt>Resuelta</dt><dd>${fecha(o.FechaResolucion)} por ${esc(o.ResueltoPor)} · ${o.CumplePlazo === 'Sí' ? '✓ en plazo' : o.CumplePlazo === 'No' ? '✗ fuera de plazo' : 'sin plazo fijo'}</dd>` : ''}
+        ${o.FotoDespuesID ? `<dt>Arreglo</dt><dd><a href="#" onclick="verFoto('${esc(o.FotoDespuesID)}');return false">Ver foto del después</a></dd>` : ''}
+      </dl>
+      ${rp.length ? `<div class="aviso"><b>↻ Se repite:</b> ${rp.length + 1} incidencias de «${esc(o.Tipo)}» en ${esc(o.Espacio)} en los últimos 90 días. Valora una medida de fondo.
+        <ul>${rp.slice(0, 5).map(x => `<li>${fecha(x.Fecha)} · ${esc(x.Reporta)} · ${esc(x.Estado)}</li>`).join('')}</ul></div>` : ''}
+    </div>
+    <div class="lado"><div class="panel">
+      <h3>Valoración</h3>
+      ${ed ? '' : '<div class="ro">Solo lectura. Lo gestiona mantenimiento.</div>'}
+      <label for="sPlazo">Prioridad</label>
+      <select id="sPlazo" class="plazo" ${ed ? '' : 'disabled'} onchange="M.dirty.plazo=this.value;pintarDetalle()">
+        <option value="">— Elegir nivel —</option>
+        ${I.plazos.map(p => `<option ${p.nombre === plazo ? 'selected' : ''}>${esc(p.nombre)}</option>`).join('')}
+      </select>
+      <div class="lim">${esc(limTxt)}</div>
+      ${!plazo && urg(o) === 2 ? `<div class="lim" style="color:#D93025">🔴 Riesgo de seguridad: rompe la cadena, atiéndela hoy.</div>`
+        : !plazo && urg(o) === 1 ? `<div class="lim" style="color:#9A6B00">🟡 Impide el funcionamiento: rompe la cadena, en 24 h.</div>`
+        : rp.length && !plazo ? `<div class="lim" style="color:#B45309">↻ Se repite en este lugar: valora el <b>Nivel 3 · recurrente</b>.</div>` : ''}
+      <label for="sEstado">Estado</label>
+      <select id="sEstado" ${ed ? '' : 'disabled'} onchange="M.dirty.estado=this.value;pintarDetalle()">
+        ${ESTADOS_UI.map(([v, n]) => `<option value="${esc(v)}" ${v === estado ? 'selected' : ''}>${esc(n)}</option>`).join('')}
+      </select>
+      <label for="sAsig">Asignar a</label>
+      <select id="sAsig" ${ed ? '' : 'disabled'} onchange="M.dirty.asignado=this.value;pintarDetalle()">
+        <option value="">— Sin asignar —</option>
+        ${personas().map(n => `<option ${n === asig ? 'selected' : ''}>${esc(n)}</option>`).join('')}
+      </select>
+      <label for="tNota">Nota de mantenimiento</label>
+      <textarea id="tNota" ${ed ? '' : 'disabled'} placeholder="Opcional: qué se ha hecho, material, proveedor…" oninput="M.dirty.nota=this.value">${esc(d.nota !== undefined ? d.nota : o.NotaMantenimiento)}</textarea>
+      ${ed ? `<label class="mini-file" for="fDesp">${d.fotoDespues ? '✓ Foto del arreglo lista' : '📷 Añadir foto del arreglo (opcional)'}</label>
+        <button class="btn" ${M.guardando || !Object.keys(d).length ? 'disabled' : ''} onclick="guardar()">${M.guardando ? 'Guardando…' : 'Guardar'}</button>
+        ${o.Estado !== 'Resuelta' ? `<button class="btn sec" ${M.guardando ? 'disabled' : ''} onclick="M.dirty.estado='Resuelta';guardar()">✓ Marcar como resuelta</button>` : ''}` : ''}
+      <button class="bimp" onclick="imprimirOrden()">🖨 Imprimir orden de trabajo</button>
+      ${ed ? `<button class="bimp bdel" ${M.guardando ? 'disabled' : ''} onclick="eliminar()">🗑 Eliminar incidencia</button>` : ''}
+    </div>${pintarQuien(o)}</div></div>`;
+  if (o.FotoID && !M.fotos[o.FotoID]) {
+    call('getFoto', o.FotoID).then(src => { M.fotos[o.FotoID] = src; const im = $('#imgFull'); if (im && M.sel === o.ID) im.src = src; }).catch(() => {});
+  }
+}
+/* ---------- ¿Quién lo arregla? (pestaña Contactos) ---------- */
+const iniciales = n => String(n).replace(/\(.*?\)/g, '').trim().split(/\s+/).filter(x => /^\p{L}/u.test(x)).slice(0, 2).map(x => x[0] || '').join('').toUpperCase() || '?';
+const telLimpio = t => String(t || '').replace(/[^\d+]/g, '');
+function waNum(t) { let d = telLimpio(t).replace(/^\+/, ''); if (d.length === 9) d = '34' + d; return d; }
+function mensaje(o) {
+  return `Hola, os escribimos del Colegio Ibn Gabirol (La Moraleja). Tenemos una incidencia de mantenimiento:\n\n`
+    + `• ${o.Tipo} en ${o.Espacio} (${o.Zona})\n• Impacto: ${o.Impacto}\n` + (o.Nota ? `• Detalle: ${o.Nota}\n` : '')
+    + `• Referencia: ${o.ID}\n\n¿Podríais indicarnos cuándo podéis venir? Gracias.`;
+}
+// Una tarjeta. o = incidencia (para el mensaje y asignar) o null en la pestaña Contactos
+function tarjeta(c, o, asig, mini) {
+  const ed = M.init.user.edita, tel = telLimpio(c.telefono), es = !!o && c.nombre === asig;
+  const asunto = encodeURIComponent(o ? `${o.ID} · ${o.Tipo} · ${o.Espacio}` : 'Colegio Ibn Gabirol · Mantenimiento');
+  const cuerpo = encodeURIComponent(o ? mensaje(o) : 'Hola, os escribimos del Colegio Ibn Gabirol (La Moraleja), del equipo de mantenimiento.\n\n');
+  if (mini) return `<div class="cc mini${c.externo ? ' ext' : ''}${es ? ' asig' : ''}" title="${esc([c.empresa, c.telefono, c.email, c.notas].filter(Boolean).join(' · '))}">
+    <div class="top"><div class="av">${esc(iniciales(c.nombre))}</div>
+      <div style="min-width:0;flex:1"><div class="nm">${esc(c.nombre)}</div><div class="em">${esc(c.empresa || (c.externo ? 'Externo' : 'Interno'))}</div></div>
+      ${ed ? `<button class="ed" title="Editar contacto" onclick="editarContacto(${c.fila})">✏️</button>` : ''}</div>
+    <div class="acc">
+      <a class="${tel ? '' : 'off'}" href="tel:${esc(tel)}" title="${esc(c.telefono || 'Sin teléfono')}">📞</a>
+      <a class="wa ${tel ? '' : 'off'}" href="https://wa.me/${waNum(c.telefono)}?text=${cuerpo}" target="_blank" rel="noopener" title="WhatsApp">💬</a>
+      <a class="${c.email ? '' : 'off'}" href="mailto:${esc(c.email)}?subject=${asunto}&body=${cuerpo}" title="${esc(c.email || 'Sin email')}">✉️</a>
+    </div>
+    ${ed ? `<div class="acc"><button class="asg" onclick="asignar('${esc(c.nombre).replace(/'/g, '&#39;')}')">${es ? '✓ Asignada · quitar' : '👷 Asignar'}</button></div>` : ''}
+  </div>`;
+  return `<div class="cc${c.externo ? ' ext' : ''}${es ? ' asig' : ''}">
+    <div class="top"><div class="av">${esc(iniciales(c.nombre))}</div>
+      <div style="min-width:0"><div class="nm">${esc(c.nombre)}</div><div class="em">${esc(c.empresa)}</div></div>
+      <span class="tag">${c.externo ? 'Externo' : 'Interno'}</span>${ed ? `<button class="ed" title="Editar contacto" onclick="editarContacto(${c.fila}, ${o ? 'false' : 'true'})">✏️</button>` : ''}</div>
+    ${o ? '' : `<div class="tps">${c.tipos.map(x => `<span>${/^todos$/i.test(x) ? '⭐ Todos' : esc(icono(x) + ' ' + x)}</span>`).join('')}</div>`}
+    <div class="dat">${c.telefono ? `<span>📞 ${esc(c.telefono)}</span>` : '<span class="no">Sin teléfono</span>'}${c.email ? `<span>✉️ ${esc(c.email)}</span>` : '<span class="no">Sin email</span>'}</div>
+    ${c.notas ? `<div class="nt">${esc(c.notas)}</div>` : ''}
+    <div class="acc">
+      <a class="${tel ? '' : 'off'}" href="tel:${esc(tel)}">📞 Llamar</a>
+      <a class="wa ${tel ? '' : 'off'}" href="https://wa.me/${waNum(c.telefono)}?text=${cuerpo}" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="${c.email ? '' : 'off'}" href="mailto:${esc(c.email)}?subject=${asunto}&body=${cuerpo}">✉️ Email</a>
+    </div>
+    ${o && ed ? `<div class="acc"><button class="asg" onclick="asignar('${esc(c.nombre).replace(/'/g, '&#39;')}')">${es ? '✓ Asignada · quitar' : '👷 Asignar a ' + esc(c.nombre.split(' ')[0])}</button></div>` : ''}
+  </div>`;
+}
+function pintarQuien(o) {
+  const todos = M.init.contactos || [];
+  if (!todos.length && !M.init.user.edita) return '';
+  const asig = M.dirty.asignado !== undefined ? M.dirty.asignado : (o.Asignado || '');
+  const vale = c => c.tipos.some(x => /^todos$/i.test(x) || x === o.Tipo);
+  let l = M.verTodos ? todos.slice() : todos.filter(c => vale(c) || c.nombre === asig);
+  l.sort((a, b) => (b.nombre === asig) - (a.nombre === asig) || (vale(b) - vale(a)) || (b.externo - a.externo));
+  const ed = M.init.user.edita, resto = todos.length - todos.filter(c => vale(c) || c.nombre === asig).length;
+  return `<div class="quien mini"><h3>¿Quién lo arregla?</h3>
+    <div class="sub">${asig ? `Asignada a <b>${esc(asig)}</b>.` : 'Sin asignar.'} Contactos para «${esc(o.Tipo)}».</div>
+    <div class="ccards">${l.map(c => tarjeta(c, o, asig, true)).join('') || (ed ? '' : '<div class="vacio" style="padding:20px">No hay contactos para este tipo.</div>')}${ed ? `<button class="cc nuevo mini" onclick="editarContacto(0)">➕ Añadir contacto</button>` : ''}</div>
+    ${resto > 0 || M.verTodos ? `<button class="vertodos" onclick="M.verTodos=!M.verTodos;pintarDetalle()">${M.verTodos ? 'Ver solo los de este tipo' : 'Ver todos (' + todos.length + ')'}</button>` : ''}
+  </div>`;
+}
+
+/* ---------- Pestaña Contactos (agenda de quién arregla qué) ---------- */
+function pintarContactos() {
+  const ed = M.init.user.edita, q = (M.cBusca || '').toLowerCase(), tp = M.cTipo || '';
+  const todos = (M.init.contactos || []).slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+  const l = todos.filter(c => (!q || [c.nombre, c.empresa, c.telefono, c.email, c.notas].join(' ').toLowerCase().includes(q))
+    && (!tp || c.tipos.some(x => x === tp || /^todos$/i.test(x))));
+  const vb = $('#vCon').querySelector('.cfil input'), foco = vb && document.activeElement === vb, pos = foco ? vb.selectionStart : 0;
+  $('#vCon').innerHTML = `<div class="dcont">
+    <div class="dtop"><h2>Contactos</h2>${ed ? '<button class="btn" onclick="editarContacto(0, true)">➕ Añadir contacto</button>' : ''}</div>
+    <div class="cfil"><input type="search" placeholder="Buscar por nombre, empresa, teléfono…" value="${esc(M.cBusca || '')}" oninput="M.cBusca=this.value;pintarContactos()">
+      <select onchange="M.cTipo=this.value;pintarContactos()"><option value="">Todos los tipos</option>${M.init.tipos.map(t => `<option ${tp === t.nombre ? 'selected' : ''}>${esc(t.nombre)}</option>`).join('')}</select></div>
+    <div class="ccards">${l.map(c => tarjeta(c, null, '')).join('') || `<div class="vacio" style="padding:20px">${todos.length ? 'Ningún contacto coincide.' : 'Aún no hay contactos.'}</div>`}${ed ? `<button class="cc nuevo" onclick="editarContacto(0, true)">➕ Añadir contacto</button>` : ''}</div>
+  </div>`;
+  if (foco) { const n = $('#vCon').querySelector('.cfil input'); n.focus(); n.setSelectionRange(pos, pos); }
+}
+function repintarContactos() {
+  if (!$('#vCon').hidden) pintarContactos();
+  if (M.sel) pintarDetalle();
+}
+
+function editarContacto(fila, agenda) {
+  const o = (!agenda && M.list.find(x => x.ID === M.sel)) || {};
+  const c = (M.init.contactos || []).find(x => x.fila === fila) || { nombre: '', empresa: '', tipos: o.Tipo ? [o.Tipo] : [], telefono: '', email: '', externo: true, notas: '' };
+  const tipos = ['Todos', ...M.init.tipos.map(t => t.nombre)];
+  c.tipos.forEach(t => { if (!tipos.includes(t) && !/^todos$/i.test(t)) tipos.push(t); });
+  const marc = t => c.tipos.some(x => x === t || (/^todos$/i.test(x) && t === 'Todos'));
+  let d = document.getElementById('dlgC');
+  if (!d) { d = document.createElement('dialog'); d.id = 'dlgC'; d.className = 'dlg'; document.body.appendChild(d); }
+  d.innerHTML = `<form method="dialog" onsubmit="event.preventDefault();guardarContactoUI(${fila || 0})">
+    <h3>${fila ? 'Editar contacto' : 'Nuevo contacto'}</h3>
+    <label>Nombre<input type="text" name="nombre" required maxlength="80" value="${esc(c.nombre)}" placeholder="Persona o empresa"></label>
+    <label>Empresa / puesto<input type="text" name="empresa" maxlength="100" value="${esc(c.empresa)}" placeholder="Ej.: Electricidad Martín S.L."></label>
+    <label>Teléfono<input type="tel" name="telefono" maxlength="30" value="${esc(c.telefono)}" placeholder="600 000 000"></label>
+    <label>Email<input type="email" name="email" maxlength="120" value="${esc(c.email)}" placeholder="nombre@empresa.com"></label>
+    <label>¿De dentro o de fuera del colegio?</label>
+    <div class="seg"><label><input type="radio" name="ext" value="0" ${c.externo ? '' : 'checked'}> Interno</label><label><input type="radio" name="ext" value="1" ${c.externo ? 'checked' : ''}> Externo</label></div>
+    <label>¿Qué arregla? <span style="font-weight:400">Sale en las incidencias de estos tipos</span></label>
+    <div class="chips">${tipos.map(t => `<label><input type="checkbox" name="tipos" value="${esc(t)}" ${marc(t) ? 'checked' : ''}> ${t === 'Todos' ? '⭐ Todos' : esc(icono(t) + ' ' + t)}</label>`).join('')}</div>
+    <label>Notas<input type="text" name="notas" maxlength="200" value="${esc(c.notas)}" placeholder="Ej.: urgencias 24 h, contrato anual…"></label>
+    <div class="pie">${fila ? `<button type="button" class="borrar" onclick="borrarContactoUI(${fila})">🗑 Borrar</button>` : '<span style="margin-right:auto"></span>'}
+      <button type="button" class="btn sec" onclick="this.closest('dialog').close()">Cancelar</button>
+      <button class="btn" id="bGC">Guardar</button></div>
+  </form>`;
+  d.showModal();
+}
+async function guardarContactoUI(fila) {
+  const f = document.querySelector('#dlgC form'), b = document.getElementById('bGC');
+  const datos = { nombre: f.nombre.value.trim(), empresa: f.empresa.value.trim(), telefono: f.telefono.value.trim(), email: f.email.value.trim(),
+    externo: f.ext.value === '1', notas: f.notas.value.trim(), tipos: [...f.querySelectorAll('input[name=tipos]:checked')].map(x => x.value) };
+  const ant = (M.init.contactos || []).find(x => x.fila === fila);
+  b.disabled = true; b.textContent = 'Guardando…';
+  try {
+    M.init.contactos = await api('guardarContacto', fila || '', datos);
+    document.getElementById('dlgC').close();
+    if (ant && ant.nombre !== datos.nombre && M.list.some(o => o.Asignado === ant.nombre))
+      alert('Las incidencias que ya estaban asignadas a «' + ant.nombre + '» siguen con ese nombre. Vuelve a asignarlas si hace falta.');
+    repintarContactos();
+  } catch (e) { alert('No se ha podido guardar.\n\n' + (e.message || e)); b.disabled = false; b.textContent = 'Guardar'; }
+}
+async function borrarContactoUI(fila) {
+  const c = M.init.contactos.find(x => x.fila === fila);
+  if (!c || !confirm('¿Borrar la tarjeta de «' + c.nombre + '»?')) return;
+  try { M.init.contactos = await api('borrarContacto', fila, c.nombre); document.getElementById('dlgC').close(); repintarContactos(); }
+  catch (e) { alert('No se ha podido borrar.\n\n' + (e.message || e)); }
+}
+
+function asignar(nombre) {
+  const o = M.list.find(x => x.ID === M.sel);
+  const actual = M.dirty.asignado !== undefined ? M.dirty.asignado : (o.Asignado || '');
+  M.dirty.asignado = actual === nombre ? '' : nombre;
+  guardar();
+}
+
+async function verFoto(id) {
+  const src = M.fotos[id] || (M.fotos[id] = await call('getFoto', id));
+  const w = window.open(); if (w) w.document.write('<img src="' + src + '" style="max-width:100%">');
+}
+async function fotoDespues(input) {
+  const f = input.files && input.files[0]; input.value = '';
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
+  const k = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement('canvas'); c.width = img.naturalWidth * k; c.height = img.naturalHeight * k;
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  M.dirty.fotoDespues = c.toDataURL('image/jpeg', .8);
+  URL.revokeObjectURL(url);
+  pintarDetalle();
+}
+async function guardar() {
+  const o = M.list.find(x => x.ID === M.sel);
+  const cambios = Object.assign({}, M.dirty);
+  if (cambios.estado === o.Estado) delete cambios.estado;
+  if (cambios.plazo === o.Plazo) delete cambios.plazo;
+  if (cambios.asignado !== undefined && cambios.asignado === (o.Asignado || '')) delete cambios.asignado;
+  M.guardando = true; pintarDetalle();
+  try {
+    const nuevo = await call('actualizarIncidencia', o.ID, cambios);
+    if (!nuevo.Miniatura) nuevo.Miniatura = o.Miniatura;
+    M.list[M.list.indexOf(o)] = nuevo;
+    M.dirty = {};
+  } catch (e) { alert('No se ha podido guardar: ' + (e.message || e)); }
+  M.guardando = false;
+  pintarLista(); pintarDetalle();
+}
+
+async function eliminar() {
+  const o = M.list.find(x => x.ID === M.sel);
+  if (!o || !confirm('¿Eliminar la incidencia ' + o.ID + ' (' + (o.Espacio || o.Zona || '') + ')?\n\nSe borra de la Hoja y no se puede deshacer. Si solo no hay que hacerla, mejor ponla como «Descartada».')) return;
+  M.guardando = true; pintarDetalle();
+  try {
+    await call('borrarIncidencia', o.ID);
+    M.list.splice(M.list.indexOf(o), 1);
+    M.sel = null; M.dirty = {};
+    $('#vInc').classList.remove('vdet');
+  } catch (e) { alert('No se ha podido eliminar: ' + (e.message || e)); }
+  M.guardando = false;
+  pintarLista(); pintarDetalle();
+}
+
+/* ---------- Imprimir y descargar ---------- */
+function filtrosTexto() {
+  const f = FILTROS.find(x => x[0] === M.filtro)[1];
+  return [f, M.urg === '2' ? '🔴 Seguridad' : M.urg === '1' ? '🟡 Funcionamiento' : 'Todas las urgencias', M.zona || 'Todas las zonas', M.tipo || 'Todos los tipos',
+    M.pers === '—' ? 'Sin asignar' : M.pers ? 'Asignadas a ' + M.pers : 'Todas las personas'].join(' · ');
+}
+function estadoTexto(o) { return semaforo(o)[1]; }
+const CSS_IMP = `body{font-family:Manrope,Arial,sans-serif;color:#1B2B24;margin:24px;font-size:12px}
+  h1{font-size:20px;margin:0 0 4px}.sub{color:#555;margin:0 0 16px}
+  table{width:100%;border-collapse:collapse}th,td{border:1px solid #bbb;padding:6px;text-align:left;vertical-align:top}
+  th{background:#EAF2EE;font-size:11px;text-transform:uppercase}tr{page-break-inside:avoid}
+  .cab{display:flex;align-items:center;gap:12px;margin-bottom:12px}.cab img{height:40px}
+  dl{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;font-size:14px}dt{font-weight:800}dd{margin:0}
+  .foto{max-width:100%;max-height:340px;margin:12px 0;border-radius:8px}
+  .caja{border:1px solid #bbb;border-radius:8px;min-height:90px;padding:8px;margin-top:6px}
+  .firmas{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:30px}.firmas div{border-top:1px solid #333;padding-top:4px}
+  .pers{page-break-before:always}.pers:first-of-type{page-break-before:auto}
+  .pers h2{font-size:17px;margin:0 0 2px}.ok{width:22px;text-align:center;font-size:16px}
+  tr.rojo td{background:#FDECEC}tr.amar td{background:#FFF6D6}
+  @page{margin:14mm}`;
+function ventanaImprimir(titulo, html) {
+  const w = window.open('', '_blank');
+  if (!w) { alert('El navegador ha bloqueado la ventana. Permite las ventanas emergentes para imprimir.'); return; }
+  w.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>${CSS_IMP}</style></head><body>
+    <div class="cab"><img src="${new URL('logo-color.png', location.href).href}" alt=""><div><h1>${esc(titulo)}</h1></div></div>${html}
+    <script>window.onload=()=>setTimeout(()=>window.print(),300)<\/script></body></html>`);
+  w.document.close();
+}
+// Orden de ejecución: 🔴, 🟡, después la fecha límite más cercana (vencidas primero), y por antigüedad
+function ordenPrioridad(a, b) {
+  const lim = o => o.FechaLimite ? t(o.FechaLimite) : Infinity;
+  return (urg(b) - urg(a)) || (lim(a) - lim(b)) || (impIdx(b) - impIdx(a)) || (t(a.Fecha) - t(b.Fecha));
+}
+function imprimirPorPersona() {
+  const abiertas = baseFiltrada().filter(abierta);
+  const grupos = {};
+  abiertas.forEach(o => { const k = o.Asignado || 'Sin asignar'; (grupos[k] = grupos[k] || []).push(o); });
+  const nombres = Object.keys(grupos).sort((a, b) => (a === 'Sin asignar') - (b === 'Sin asignar') || a.localeCompare(b, 'es'));
+  if (!nombres.length) { alert('No hay incidencias abiertas con estos filtros.'); return; }
+  const hoy = fecha(new Date().toISOString());
+  ventanaImprimir('Trabajo por persona', nombres.map(n => {
+    const l = grupos[n].sort(ordenPrioridad);
+    return `<section class="pers"><h2>👷 ${esc(n)}</h2><p class="sub">${l.length} incidencia${l.length === 1 ? '' : 's'} abierta${l.length === 1 ? '' : 's'} · por orden de prioridad · ${hoy}</p>
+      <table><thead><tr><th>#</th><th>Prioridad</th><th>Fecha límite</th><th>Lugar</th><th>Tipo</th><th>¿Qué le pasa?</th><th>Nº</th><th class="ok">Hecho</th></tr></thead><tbody>
+      ${l.map((o, i) => { const u = urg(o); return `<tr class="${u === 2 ? 'rojo' : u === 1 ? 'amar' : ''}"><td>${i + 1}</td>
+        <td>${esc(o.Plazo || (u === 2 ? '🔴 Seguridad (sin valorar)' : u === 1 ? '🟡 Funcionamiento (sin valorar)' : 'Sin valorar'))}</td>
+        <td>${o.FechaLimite ? fecha(o.FechaLimite) + (vencida(o) ? ' ⚠ vencida' : '') : '—'}</td>
+        <td>${esc(o.Espacio)}<br><small>${esc(o.Zona)}</small></td><td>${esc(o.Tipo)}<br><small>${esc(o.Impacto)}</small></td>
+        <td>${esc(o.Nota || '')}${o.NotaMantenimiento ? `<br><small>🛠 ${esc(o.NotaMantenimiento)}</small>` : ''}</td><td>${esc(o.ID)}</td><td class="ok">☐</td></tr>`; }).join('')}
+      </tbody></table></section>`;
+  }).join(''));
+}
+function imprimirListado() {
+  const l = listaActual();
+  ventanaImprimir('Incidencias de mantenimiento', `<p class="sub">${esc(filtrosTexto())} · ${l.length} incidencia${l.length === 1 ? '' : 's'} · ${fecha(new Date().toISOString())}</p>
+    <table><thead><tr><th>Nº</th><th>Fecha</th><th>Lugar</th><th>Tipo</th><th>Impacto</th><th>¿Qué le pasa?</th><th>Prioridad</th><th>Estado</th><th>Asignada a</th><th>Nota mantenimiento</th></tr></thead><tbody>
+    ${l.map(o => `<tr><td>${esc(o.ID)}</td><td>${fecha(o.Fecha)}</td><td>${esc(o.Espacio)}<br><small>${esc(o.Zona)}</small></td><td>${esc(o.Tipo)}</td><td>${esc(o.Impacto)}</td>
+      <td>${esc(o.Nota || '')}</td><td>${esc(o.Plazo || '—')}</td><td>${esc(estadoTexto(o))}</td><td>${esc(o.Asignado || '—')}</td><td>${esc(o.NotaMantenimiento || '')}</td></tr>`).join('') || '<tr><td colspan="10">No hay incidencias con estos filtros.</td></tr>'}
+    </tbody></table>`);
+}
+async function imprimirOrden() {
+  const o = M.list.find(x => x.ID === M.sel);
+  if (!o) return;
+  let src = M.fotos[o.FotoID] || o.Miniatura || '';
+  if (o.FotoID && !M.fotos[o.FotoID]) { try { src = M.fotos[o.FotoID] = await call('getFoto', o.FotoID); } catch (e) {} }
+  ventanaImprimir('Orden de trabajo · ' + o.ID, `<dl>
+      <dt>Lugar</dt><dd>${esc(o.Espacio)} (${esc(o.Zona)})</dd>
+      <dt>Tipo</dt><dd>${esc(o.Tipo)}</dd>
+      <dt>Impacto</dt><dd>${esc(o.Impacto)}</dd>
+      <dt>Reporta</dt><dd>${esc(o.Reporta)} · ${fecha(o.Fecha)}</dd>
+      <dt>¿Qué le pasa?</dt><dd>${esc(o.Nota || '—')}</dd>
+      <dt>Estado</dt><dd>${esc(estadoTexto(o))}${o.Plazo ? ' · Plazo: ' + esc(o.Plazo) : ''}</dd>
+      ${o.FechaLimite ? `<dt>Fecha límite</dt><dd>${fecha(o.FechaLimite)}</dd>` : ''}
+      <dt>Asignada a</dt><dd>${esc(o.Asignado || '—')}</dd>
+      ${o.NotaMantenimiento ? `<dt>Nota mantenimiento</dt><dd>${esc(o.NotaMantenimiento)}</dd>` : ''}
+    </dl>
+    ${src ? `<img class="foto" src="${src}" alt="Foto">` : ''}
+    <p><b>Trabajo realizado / material:</b></p><div class="caja"></div>
+    <div class="firmas"><div>Fecha de resolución</div><div>Firma</div></div>`);
+}
+function descargarListado() {
+  const l = listaActual();
+  const cols = [['Nº', 'ID'], ['Fecha', o => fecha(o.Fecha)], ['Zona', 'Zona'], ['Lugar', 'Espacio'], ['Tipo', 'Tipo'], ['Impacto', 'Impacto'],
+    ['Qué le pasa', 'Nota'], ['Reporta', 'Reporta'], ['Estado', o => estNombre(o.Estado)], ['Plazo', 'Plazo'], ['Fecha límite', o => o.FechaLimite ? fecha(o.FechaLimite) : ''],
+    ['Asignada a', 'Asignado'], ['Nota mantenimiento', 'NotaMantenimiento'], ['Resuelta', o => o.FechaResolucion ? fecha(o.FechaResolucion) : '']];
+  const cel = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const filas = [cols.map(c => cel(c[0])).join(';'), ...l.map(o => cols.map(c => cel(typeof c[1] === 'function' ? c[1](o) : o[c[1]])).join(';'))];
+  const blob = new Blob(['\ufeff' + filas.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'incidencias_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ---------- Datos y control ---------- */
+function inicioCurso() { const n = new Date(), y = n.getMonth() >= 8 ? n.getFullYear() : n.getFullYear() - 1; return new Date(y, 8, 1).getTime(); }
+function contar(arr, key) { const m = {}; arr.forEach(o => { const k = typeof key === 'function' ? key(o) : o[key]; if (k) m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); }
+function mediana(a) { a = a.filter(x => isFinite(x)).sort((x, y) => x - y); if (!a.length) return NaN; const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; }
+function barras(titulo, pares, max) {
+  const top = Math.max(1, ...pares.map(p => p[1]));
+  return `<div class="box"><h3>${titulo}</h3>${pares.length ? pares.slice(0, max || 8).map(p => `<div class="bar"><span class="lb" title="${esc(p[0])}">${esc(p[0])}</span><span class="tr"><span class="fl" style="display:block;width:${(p[1] / top * 100).toFixed(1)}%"></span></span><span class="n">${p[1]}</span></div>`).join('') : '<div class="vacio" style="padding:20px">Sin datos</div>'}</div>`;
+}
+function pintarDatos() {
+  const desde = { '30': Date.now() - 30 * D, '90': Date.now() - 90 * D, 'curso': inicioCurso(), 'todo': 0 }[M.periodo];
+  const L = M.list.filter(o => t(o.Fecha) >= desde);
+  const res = L.filter(o => o.Estado === 'Resuelta');
+  const conPlazo = res.filter(o => o.CumplePlazo === 'Sí' || o.CumplePlazo === 'No');
+  const enPlazo = conPlazo.filter(o => o.CumplePlazo === 'Sí').length;
+  const pct = conPlazo.length ? Math.round(enPlazo / conPlazo.length * 100) : null;
+  const medRes = mediana(res.map(o => +o.HorasResolucion));
+  const medVal = mediana(L.filter(o => o.FechaValoracion).map(o => (t(o.FechaValoracion) - t(o.Fecha)) / H));
+  const abiertas = M.list.filter(abierta), venc = M.list.filter(vencida), sinPlazo = M.list.filter(o => o.Estado === 'Nueva');
+  const porTipo = contar(L, 'Tipo'), porZona = contar(L, 'Zona'), porEsp = contar(L, 'Espacio'), porImp = contar(L, 'Impacto');
+  // Reincidencias: mismo espacio + tipo, 2 o más veces en el periodo
+  const grupos = {};
+  L.forEach(o => { const k = o.Espacio + '||' + o.Tipo; (grupos[k] = grupos[k] || []).push(o); });
+  const reinc = Object.values(grupos).filter(g => g.length >= 2).sort((a, b) => b.length - a.length);
+  // Cumplimiento por plazo
+  const porPlazo = M.init.plazos.map(p => {
+    const g = L.filter(o => o.Plazo === p.nombre), r = g.filter(o => o.CumplePlazo === 'Sí' || o.CumplePlazo === 'No');
+    return { p: p.nombre, n: g.length, ab: g.filter(abierta).length, pct: r.length ? Math.round(r.filter(o => o.CumplePlazo === 'Sí').length / r.length * 100) : null, med: mediana(g.filter(o => o.Estado === 'Resuelta').map(o => +o.HorasResolucion)) };
+  }).filter(x => x.n);
+  // Por mes
+  const meses = []; const n = new Date();
+  for (let i = 5; i >= 0; i--) { const d = new Date(n.getFullYear(), n.getMonth() - i, 1); meses.push([d, M.list.filter(o => { const f = new Date(o.Fecha); return f.getFullYear() === d.getFullYear() && f.getMonth() === d.getMonth(); }).length]); }
+  const maxMes = Math.max(1, ...meses.map(m => m[1]));
+  // Antigüedad de abiertas
+  const edad = o => (Date.now() - t(o.Fecha)) / D;
+  const ant = [['Menos de 2 días', abiertas.filter(o => edad(o) < 2).length], ['2 a 7 días', abiertas.filter(o => edad(o) >= 2 && edad(o) < 7).length], ['7 a 30 días', abiertas.filter(o => edad(o) >= 7 && edad(o) < 30).length], ['Más de 30 días', abiertas.filter(o => edad(o) >= 30).length]];
+  // Hallazgos automáticos
+  const hz = [];
+  if (porTipo[0] && L.length) hz.push(`<b>${esc(porTipo[0][0])}</b> es el tipo más frecuente: ${porTipo[0][1]} de ${L.length} (${Math.round(porTipo[0][1] / L.length * 100)}%).`);
+  if (reinc[0]) hz.push(`<b>${esc(reinc[0][0].Espacio)}</b> acumula ${reinc[0].length} incidencias de «${esc(reinc[0][0].Tipo)}». Candidato a revisión preventiva o sustitución.`);
+  if (pct !== null) hz.push(`Se cumple el plazo comprometido en el <b>${pct}%</b> de los casos (${enPlazo} de ${conPlazo.length}).`);
+  if (venc.length) hz.push(`Hay <b>${venc.length}</b> incidencia${venc.length > 1 ? 's' : ''} fuera de plazo ahora mismo.`);
+  const ext = L.filter(o => /proveedor|nivel 2/i.test(o.Plazo)).length;
+  if (ext) hz.push(`${ext} incidencia${ext > 1 ? 's han' : ' ha'} necesitado material o personal de fuera (Nivel 2).`);
+  const rec = L.filter(o => /nivel 3/i.test(o.Plazo)).length;
+  if (rec) hz.push(`${rec} incidencia${rec > 1 ? 's son recurrentes' : ' es recurrente'} (Nivel 3): conviene una solución de fondo.`);
+
+  $('#vDat').innerHTML = `<div class="dcont">
+    <div class="dtop"><h2>Datos y control</h2>
+      <select onchange="M.periodo=this.value;pintarDatos()">
+        ${[['30', 'Últimos 30 días'], ['90', 'Últimos 90 días'], ['curso', 'Este curso'], ['todo', 'Todo']].map(p => `<option value="${p[0]}" ${M.periodo === p[0] ? 'selected' : ''}>${p[1]}</option>`).join('')}
+      </select></div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Recibidas</div><div class="v">${L.length}</div><div class="s">en el periodo</div></div>
+      <div class="kpi"><div class="l">Abiertas ahora</div><div class="v">${abiertas.length}</div><div class="s">${sinPlazo.length} sin plazo</div></div>
+      <div class="kpi"><div class="l">Vencidas ahora</div><div class="v" style="color:${venc.length ? 'var(--rojo)' : 'inherit'}">${venc.length}</div><div class="s">fuera del plazo fijado</div></div>
+      <div class="kpi"><div class="l">Cumplimiento de plazo</div><div class="v">${pct === null ? '—' : pct + '%'}</div><div class="s">${enPlazo} de ${conPlazo.length} resueltas</div></div>
+      <div class="kpi"><div class="l">Tiempo hasta valorar</div><div class="v">${isFinite(medVal) ? dur(medVal) : '—'}</div><div class="s">mediana</div></div>
+      <div class="kpi"><div class="l">Tiempo hasta resolver</div><div class="v">${isFinite(medRes) ? dur(medRes) : '—'}</div><div class="s">mediana</div></div>
+    </div>
+    ${hz.length ? `<div class="hall"><h3>Qué dicen los datos</h3><ul>${hz.map(h => `<li>${h}</li>`).join('')}</ul></div>` : ''}
+    <div class="g3">${barras('Por tipo', porTipo)}${barras('Por zona', porZona)}${barras('Espacios con más incidencias', porEsp)}</div>
+    <div class="g2">
+      <div class="box"><h3>↻ Incidencias que se repiten (mismo espacio y tipo)</h3>
+        ${reinc.length ? `<table><tr><th>Espacio</th><th>Tipo</th><th class="r">Veces</th><th>Última</th><th class="r">Abiertas</th></tr>
+        ${reinc.slice(0, 10).map(g => { const u = g.reduce((a, b) => t(a.Fecha) > t(b.Fecha) ? a : b); return `<tr><td>${esc(g[0].Espacio)}</td><td>${icono(g[0].Tipo)} ${esc(g[0].Tipo)}</td><td class="r"><b>${g.length}</b></td><td>${fecha(u.Fecha).slice(0, 8)}</td><td class="r">${g.filter(abierta).length}</td></tr>`; }).join('')}</table>` : '<div class="vacio" style="padding:20px">Ninguna repetición en el periodo.</div>'}
+      </div>
+      <div class="box"><h3>Plazos comprometidos y cumplimiento</h3>
+        ${porPlazo.length ? `<table><tr><th>Plazo</th><th class="r">Nº</th><th class="r">Abiertas</th><th class="r">En plazo</th><th class="r">Mediana</th></tr>
+        ${porPlazo.map(x => `<tr><td>${esc(x.p)}</td><td class="r">${x.n}</td><td class="r">${x.ab}</td><td class="r">${x.pct === null ? '—' : x.pct + '%'}</td><td class="r">${isFinite(x.med) ? dur(x.med) : '—'}</td></tr>`).join('')}</table>` : '<div class="vacio" style="padding:20px">Sin datos</div>'}
+      </div>
+    </div>
+    <div class="g3">
+      <div class="box"><h3>Incidencias por mes</h3><div class="cols">${meses.map(m => `<div class="c"><b>${m[1]}</b><i style="height:${(m[1] / maxMes * 100).toFixed(0)}%"></i><span>${m[0].toLocaleDateString('es-ES', { month: 'short' })}</span></div>`).join('')}</div></div>
+      ${barras('Por impacto', porImp)}
+      ${barras('Antigüedad de las abiertas', ant)}
+    </div></div>`;
+}
+
+/* ---------- Datos de prueba (solo fuera de Google) ---------- */
+const MOCK = (() => {
+  const zonas = [{ zona: 'Infantil', espacios: ['Inf. 1', 'Inf. 2', 'Inf. 3 LAVAN', 'Aseos Infantil'] }, { zona: 'Primaria', espacios: ['2º EP CAJOL', '4º EP', '6º EP LAVAN'] }, { zona: 'ESO', espacios: ['1º ESO', 'Sinagoga'] }, { zona: 'Bachillerato', espacios: ['Laboratorio', '2º IB · Aula 1'] }, { zona: 'Biblioteca y comunes', espacios: ['Biblioteca / Recepción'] }, { zona: 'Deporte y comedor', espacios: ['Polideportivo', 'Comedor-Grada'] }];
+  const tipos = [['Electricidad / luz', '💡'], ['Fontanería / agua', '🚰'], ['Climatización', '🌡️'], ['Mobiliario', '🪑'], ['Puertas / ventanas / persianas', '🚪'], ['Informática / proyector', '🖥️'], ['Paredes / suelo / pintura', '🧱'], ['Limpieza', '🧹'], ['Seguridad', '🧯'], ['Otro', '🔧']].map(x => ({ nombre: x[0], icono: x[1] }));
+  const impactos = ['Molesta', 'Impide dar clase', 'Riesgo de seguridad'];
+  const contactos = [
+    { fila: 2, nombre: 'Dainana', empresa: 'Mantenimiento del colegio', tipos: ['Todos'], telefono: '600 111 222', email: 'mantenimiento@colegio.test', externo: false, notas: '' },
+    { fila: 3, nombre: 'Luis Martín', empresa: 'Electricidad Martín S.L.', tipos: ['Electricidad / luz'], telefono: '600 333 444', email: 'avisos@electricidad.test', externo: true, notas: 'Urgencias 24 h' },
+    { fila: 4, nombre: 'Aguas Norte', empresa: 'Fontanería', tipos: ['Fontanería / agua'], telefono: '600 555 666', email: 'taller@fontaneria.test', externo: true, notas: '' },
+    { fila: 5, nombre: 'ClimaPro', empresa: 'Aire acondicionado y calefacción', tipos: ['Climatización'], telefono: '600 777 888', email: 'sat@clima.test', externo: true, notas: 'Contrato de mantenimiento' },
+    { fila: 6, nombre: 'Soporte TIC', empresa: 'Informática del colegio', tipos: ['Informática / proyector'], telefono: '', email: 'tic@colegio.test', externo: false, notas: '' },
+  ];
+  const plazos = [['🔴 Seguridad · inmediata (mismo día)', 8], ['🟡 Funcionamiento · en 24 h', 24], ['Nivel 1 · 48 h (hay herramientas y personas)', 48], ['Nivel 2 · hasta 7 días (falta material o persona)', 168], ['Nivel 3 · recurrente (valoración en 72 h)', 72]].map(x => ({ nombre: x[0], horas: x[1] }));
+  let s = 11; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280; const pick = a => a[Math.floor(rnd() * a.length)];
+  const cols = ['#c9d6cf', '#d8cbb5', '#b9c9d6', '#d6c1c1', '#cfd6b9'];
+  const fotos = {};
+  function img(txt, w) { const c = document.createElement('canvas'); c.width = w; c.height = w * .7; const g = c.getContext('2d'); g.fillStyle = pick(cols); g.fillRect(0, 0, c.width, c.height); g.font = (w * .3) + 'px serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, c.width / 2, c.height / 2); return c.toDataURL('image/jpeg', .7); }
+  const esp = []; zonas.forEach(z => z.espacios.forEach(e => esp.push([z.zona, e])));
+  const list = []; const now = Date.now();
+  for (let i = 1; i <= 38; i++) {
+    let e = pick(esp), tp = pick(tipos);
+    if (i % 6 === 0) { e = ['Infantil', 'Inf. 1']; tp = tipos[2]; }
+    if (i % 7 === 0) { e = ['Infantil', 'Aseos Infantil']; tp = tipos[1]; }
+    if (i % 9 === 0) { e = ['Deporte y comedor', 'Polideportivo']; tp = tipos[0]; }
+    const age = i > 33 ? rnd() * 1.2 : rnd() * 70;
+    const f = now - age * D;
+    const o = { ID: 'INC-' + String(i).padStart(4, '0'), Fecha: new Date(f).toISOString(), Reporta: pick(['Flor', 'Silvana', 'Bren', 'Paula', 'Julio', 'Clara']), Zona: e[0], Espacio: e[1], Tipo: tp.nombre, Impacto: pick(impactos), Nota: rnd() < .25 ? 'Desde esta mañana' : '', FotoID: 'F' + i, Estado: 'Nueva', Plazo: '', FechaValoracion: '', FechaLimite: '', FechaResolucion: '', HorasResolucion: '', CumplePlazo: '', NotaMantenimiento: '', FotoDespuesID: '', ResueltoPor: '', Asignado: '' };
+    if (tp.nombre === 'Electricidad / luz' && i % 2) o.Asignado = 'Luis Martín';
+    fotos[o.FotoID] = img(tp.icono, 900); o.Miniatura = img(tp.icono, 200);
+    if (!(age < 1.5 && rnd() < .8)) {
+      const p = pick(plazos), val = f + rnd() * 20 * H;
+      if (val < now) {
+        o.Plazo = p.nombre; o.FechaValoracion = new Date(val).toISOString(); o.Estado = 'En curso';
+        const lim = p.horas ? val + p.horas * H : 0; if (lim) o.FechaLimite = new Date(lim).toISOString();
+        if (age > 3 && rnd() < .8) {
+          const r = Math.min(now, val + (p.horas || 200) * (0.3 + rnd() * 1.1) * H);
+          o.Estado = 'Resuelta'; o.FechaResolucion = new Date(r).toISOString(); o.ResueltoPor = 'Dainana';
+          o.HorasResolucion = Math.round((r - f) / H * 10) / 10; o.CumplePlazo = lim ? (r <= lim ? 'Sí' : 'No') : '';
+        }
+      }
+    }
+    list.push(o);
+  }
+  list.reverse();
+  return {
+    getInit: async () => ({ user: { nombre: 'Dainana', rol: 'Mantenimiento', edita: true, vePanel: true }, zonas, tipos, impactos, plazos, contactos, url: 'Coordinador.html', hoja: '' }),
+    listarIncidencias: async () => list.map(o => Object.assign({}, o)),
+    guardarContacto: async (fila, d) => {
+      if (fila) Object.assign(contactos.find(c => c.fila === fila), d);
+      else contactos.push(Object.assign({ fila: Math.max(1, ...contactos.map(c => c.fila)) + 1 }, d, { tipos: d.tipos.length ? d.tipos : ['Todos'] }));
+      return contactos.map(c => Object.assign({}, c));
+    },
+    borrarContacto: async fila => { contactos.splice(contactos.findIndex(c => c.fila === fila), 1); return contactos.map(c => Object.assign({}, c)); },
+    getFoto: async id => { await new Promise(r => setTimeout(r, 200)); return fotos[id]; },
+    borrarIncidencia: async id => { list.splice(list.findIndex(x => x.ID === id), 1); await new Promise(r => setTimeout(r, 300)); return true; },
+    actualizarIncidencia: async (id, c) => {
+      const o = list.find(x => x.ID === id), now = new Date();
+      if (c.plazo !== undefined && c.plazo !== o.Plazo) { o.Plazo = c.plazo; o.FechaValoracion = c.plazo ? now.toISOString() : ''; const p = plazos.find(x => x.nombre === c.plazo); o.FechaLimite = p && p.horas ? new Date(+now + p.horas * H).toISOString() : ''; if (c.plazo && o.Estado === 'Nueva') o.Estado = 'En curso'; }
+      if (c.nota !== undefined) o.NotaMantenimiento = c.nota;
+      if (c.asignado !== undefined) o.Asignado = c.asignado;
+      if (c.estado && c.estado !== o.Estado) { o.Estado = c.estado; if (c.estado === 'Resuelta') { o.FechaResolucion = now.toISOString(); o.ResueltoPor = 'Dainana'; o.HorasResolucion = Math.round((now - new Date(o.Fecha)) / H * 10) / 10; o.CumplePlazo = o.FechaLimite ? (now <= new Date(o.FechaLimite) ? 'Sí' : 'No') : ''; } else { o.FechaResolucion = ''; o.HorasResolucion = ''; o.CumplePlazo = ''; } }
+      if (c.fotoDespues) { o.FotoDespuesID = 'D' + id; fotos[o.FotoDespuesID] = c.fotoDespues; }
+      await new Promise(r => setTimeout(r, 300));
+      return Object.assign({}, o);
+    },
+  };
+})();
+
+arrancar();
+</script>
+</body>
+</html>

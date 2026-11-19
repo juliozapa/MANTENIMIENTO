@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#1C2541">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mantenimiento">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Mantenimiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@700;800;900&family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --oscuro:#1C2541;--medio:#1B6E9A;--vivo:#44A02C;--suave:#EAF6FC;--rosa:#EE7A86;
+  --texto:#1E2A33;--texto2:#5B6B77;--borde:#DCE3E8;--fondo:#F6F8FA;
+  --ambar:#E3A33B;--ambar2:#FDF1DC;--rojo:#D64550;--rojo2:#FCE6E8;--azul2:#E3EEF0;--azul:#2E6670;
+  --r:18px;--serif:'Young Serif',Georgia,serif;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:clip}
+body{margin:0;font-family:'Manrope',system-ui,sans-serif;background:var(--fondo);color:var(--texto);-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+
+/* Cabecera */
+header{position:sticky;top:0;z-index:5;background:#fff;color:var(--texto);padding:10px 16px 12px;border-bottom:1px solid var(--borde)}
+.logo{height:38px;width:auto;display:block}
+.marca{display:flex;align-items:center;gap:11px;min-width:0}
+.marca b{display:block;font-size:17px;font-weight:800;color:var(--texto);line-height:1.15}
+.marca small{display:block;font-size:12px;font-weight:600;color:var(--texto2)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:560px;margin:0 auto}
+.marca-t{display:flex;align-items:center;gap:10px}
+.sub{display:flex;align-items:baseline;gap:8px;max-width:560px;margin:8px auto 0;min-width:0}
+.sub h1{font-family:'Manrope';font-weight:800;font-size:12px;margin:0;letter-spacing:.14em;text-transform:uppercase;color:var(--medio);flex:none}
+.sub .yo{font-size:12.5px;color:var(--texto2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top a{color:var(--medio);background:var(--suave);font-size:12.5px;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:99px;white-space:nowrap}
+.tabs{display:flex;gap:4px;max-width:560px;margin:10px auto 0;background:#EDF3EF;padding:4px;border-radius:12px}
+.tabs button{flex:1;padding:9px;border:0;background:none;font-size:14px;font-weight:700;color:var(--texto2);border-radius:9px}
+.tabs button.on{background:#fff;color:var(--oscuro);box-shadow:0 1px 3px rgba(16,36,29,.12)}
+header::after{content:"";display:block;height:0}
+main{max-width:560px;margin:0 auto;padding:18px 16px 150px}
+input[type=file]{display:none}
+
+/* Pantalla inicial */
+.hero{background:#fff;color:var(--texto);border:1px solid var(--borde);border-radius:20px;padding:30px 20px 28px;text-align:center;position:relative;overflow:hidden}
+.hero::before{display:none}
+.kicker{display:none}
+.hero h2{font-family:var(--serif);font-weight:400;font-size:24px;margin-top:0!important;line-height:1.2;margin:8px 0 22px;position:relative}
+.big{position:relative;width:148px;height:148px;margin:0 auto;border-radius:50%;background:var(--vivo);color:var(--oscuro);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:16px;font-weight:800;cursor:pointer}
+.big::after{display:none}
+@keyframes pulso{0%{transform:scale(.92);opacity:1}100%{transform:scale(1.18);opacity:0}}
+.big svg{width:48px;height:48px;margin-bottom:6px}
+.gal{display:inline-block;margin-top:20px;color:var(--medio);font-weight:700;font-size:14.5px;cursor:pointer;border-bottom:2px solid var(--vivo);padding-bottom:2px;position:relative}
+.pasos3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+.pasos3 div{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:12px 6px;text-align:center;font-size:12.5px;font-weight:700;color:var(--texto2)}
+.pasos3 b{display:block;font-size:24px;margin-bottom:4px}
+.pin{display:inline-flex;align-items:center;gap:6px;background:var(--rosa);color:#fff;padding:7px 14px;border-radius:99px;font-size:13.5px;font-weight:800;margin-bottom:16px;position:relative}
+
+/* Formulario */
+.foto{position:relative;border-radius:var(--r);overflow:hidden;background:var(--oscuro)}
+.foto img{width:100%;max-height:250px;object-fit:cover;display:block}
+.foto label{position:absolute;right:10px;bottom:10px;background:rgba(12,59,46,.8);color:#fff;padding:8px 13px;border-radius:99px;font-size:13.5px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px)}
+.foto .ok{position:absolute;left:10px;top:10px;background:var(--vivo);color:var(--oscuro);font-size:12px;font-weight:800;padding:5px 10px;border-radius:99px}
+.progreso{display:flex;gap:6px;margin:16px 0 4px}
+.progreso i{flex:1;height:6px;border-radius:99px;background:var(--borde);transition:background .25s}
+.progreso i.on{background:var(--medio)}
+.paso{margin-top:22px;scroll-margin-top:120px}
+.paso h3{font-family:var(--serif);font-weight:400;font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+.paso h3 .n{width:30px;height:30px;border-radius:50%;background:#fff;border:2px solid var(--borde);display:inline-flex;align-items:center;justify-content:center;font-family:'Manrope';font-size:14px;font-weight:800;color:var(--texto2);flex:none}
+.paso.ok h3 .n{background:var(--vivo);border-color:var(--vivo);color:var(--oscuro)}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tiles.t3{grid-template-columns:repeat(3,1fr)}
+.tile{background:#fff;border:2px solid var(--borde);border-radius:16px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:84px;font-size:13px;font-weight:700;color:var(--texto);text-align:center;line-height:1.2;transition:transform .12s,border-color .12s,background .12s}
+.tile .ic{font-size:28px;line-height:1}
+.tile:active{transform:scale(.96)}
+.tile.on{background:var(--oscuro);border-color:var(--oscuro);color:#fff}
+.tiles.zonas .tile{flex-direction:row;justify-content:flex-start;text-align:left;min-height:58px;padding:10px 12px;font-size:14px}
+.tiles.zonas .tile .ic{font-size:24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding:12px;background:var(--suave);border-radius:16px}
+.chip{border:2px solid transparent;background:#fff;border-radius:99px;padding:10px 15px;font-size:14.5px;font-weight:700;color:var(--texto);min-height:44px}
+.chip.on{background:var(--medio);color:#fff}
+.imp{display:grid;gap:10px}
+.impc{display:flex;align-items:center;gap:14px;background:#fff;border:2px solid var(--borde);border-radius:18px;padding:14px 16px;text-align:left;color:var(--texto)}
+.impc .ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+.impc b{display:block;font-size:16px}
+.impc small{display:block;color:var(--texto2);font-size:13px;margin-top:2px;font-weight:500}
+.impc.on b,.impc.on small{color:#fff}
+.nota-toggle{background:#fff;border:2px dashed var(--borde);border-radius:16px;color:var(--medio);font-size:14.5px;font-weight:700;padding:14px;width:100%}
+textarea{width:100%;min-height:90px;border:2px solid var(--borde);border-radius:16px;padding:12px;font-size:16px;font-family:inherit;background:#fff}
+textarea:focus{outline:none;border-color:var(--medio)}
+.voz{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;border:2px solid var(--medio);background:#fff;color:var(--medio);border-radius:99px;padding:12px;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+.voz.rec{background:#C0392B;border-color:#C0392B;color:#fff;animation:latido 1.2s ease-in-out infinite}
+@keyframes latido{50%{opacity:.75}}
+.nota-ayuda{font-size:13px;color:var(--texto2);margin:8px 2px 0;font-weight:600}
+
+/* Barra inferior */
+.barra{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--borde);padding:10px 16px calc(12px + env(safe-area-inset-bottom));z-index:6}
+.barra .in{max-width:560px;margin:0 auto}
+.barra small{display:block;color:var(--texto2);font-size:13px;font-weight:600;margin-bottom:8px;text-align:center}
+.btn{width:100%;border:0;border-radius:99px;background:var(--vivo);color:var(--oscuro);font-size:17px;font-weight:800;padding:16px;transition:transform .12s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{background:var(--borde);color:#7d9188}
+.btn.osc{background:var(--oscuro);color:#fff}
+
+/* Confirmación */
+.ok-scr{background:#fff;color:var(--texto);border:1px solid var(--borde);border-radius:20px;text-align:center;padding:40px 22px 28px}
+.tick{width:104px;height:104px;border-radius:50%;background:var(--vivo);color:var(--oscuro);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+.tick svg{width:52px;height:52px}
+@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.ok-scr h2{font-family:var(--serif);font-weight:400;font-size:28px;margin:0 0 8px}
+.ok-scr p{color:var(--texto2);margin:0 0 26px;line-height:1.5}
+.ok-scr .id{display:inline-block;font-weight:800;color:var(--medio);letter-spacing:.06em}
+
+/* Mis avisos */
+.resumen{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.resumen div{background:#fff;border:1px solid var(--borde);border-radius:16px;padding:12px;text-align:center}
+.resumen b{display:block;font-family:var(--serif);font-weight:400;font-size:26px}
+.resumen span{font-size:12px;font-weight:700;color:var(--texto2)}
+.card{display:flex;gap:12px;background:#fff;border:1px solid var(--borde);border-radius:var(--r);padding:12px;margin-bottom:10px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--st,var(--borde))}
+.card img,.card .ph{width:68px;height:68px;border-radius:12px;object-fit:cover;background:var(--suave);flex:none;display:flex;align-items:center;justify-content:center;font-size:28px}
+.card>div{min-width:0;flex:1}
+.card b.t{display:block;font-size:15px;font-weight:800}
+.card .meta{color:var(--texto2);font-size:12.5px;margin-top:2px;font-weight:500}
+.badge{display:inline-block;font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px;margin-top:8px}
+.b-nueva{background:var(--ambar2);color:#9a6512}.b-curso{background:var(--azul2);color:var(--azul)}.b-ok{background:var(--suave);color:var(--medio)}.b-gris{background:#eee;color:#666}.b-mal{background:var(--rojo2);color:var(--rojo)}
+.plz{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-top:10px;font-size:13px;background:var(--fondo);border-radius:12px;padding:10px 12px}
+.plz span{color:var(--texto2);font-weight:600}
+.plz b{font-weight:800}
+.nm{font-size:12.5px;color:var(--texto2);margin-top:8px;font-weight:500}
+.vacio,.cargando{color:var(--texto2);text-align:center;padding:50px 0;font-weight:600}
+.vacio .e{font-size:44px;display:block;margin-bottom:10px}
+.err{background:var(--rojo2);color:var(--rojo);padding:14px;border-radius:14px;margin:12px 0;font-weight:600}
+
+/* App: avisos e inicio de sesión */
+.avisos{display:flex;align-items:center;gap:10px;background:#EAF4FB;color:#1F4E6B;padding:10px 16px;font-size:13.5px;font-weight:600;line-height:1.35}
+.avisos span{flex:1}
+.avisos .on{border:0;background:#2A8FD0;color:#fff;border-radius:99px;padding:8px 14px;font-weight:800;font-family:inherit;font-size:13.5px;cursor:pointer}
+.avisos .x{border:0;background:none;color:inherit;font-size:16px;padding:4px 2px;cursor:pointer}
+.login{max-width:380px;margin:36px auto;text-align:center;background:#fff;border:1px solid var(--borde);border-radius:20px;padding:28px 20px}
+.login-logo{width:230px;max-width:85%}
+.login h2{font-family:var(--serif);font-weight:400;font-size:24px;margin:16px 0 6px}
+.login p{color:#4A5F57;font-size:14px;line-height:1.5;margin:0}
+#gbtn{display:flex;justify-content:center;margin-top:18px;min-height:44px}
+.salir{border:0;background:none;color:inherit;font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;opacity:.7;padding:0;margin-left:auto}
+.err{background:#FCE6E8;color:#D64550;padding:12px;border-radius:12px;margin-top:12px;font-weight:600}
+
+/* ===== Marca EDUCAGABIROL (styles/tokens.css): marino uniforme, azul y verde del logo ===== */
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+h1,h2,h3{font-family:'Nunito Sans','Inter',sans-serif}
+.wordmark{font-family:'Zilla Slab','Rockwell',Georgia,serif;line-height:.95;letter-spacing:.02em;color:#fff;text-align:left}
+.wordmark .ibn{display:block;font-size:1.9rem;font-weight:700}
+.wordmark .gab{display:block;font-size:.8rem;font-weight:700;letter-spacing:.08em}
+.lema{font-family:'Zilla Slab',Georgia,serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem;opacity:.75;margin-top:18px!important}
+.login{background:#1C2541!important;color:#fff!important;border:0!important;box-shadow:0 1px 2px rgb(15 61 87/.06),0 4px 12px rgb(15 61 87/.12)}
+.login .top-l{display:flex;align-items:center;justify-content:center;gap:12px}
+.login .top-l img{height:48px}
+.login h2{font-family:'Nunito Sans',sans-serif!important;font-weight:800!important;color:#fff}
+.login p{color:#C9D2E4!important}
+.avisos{background:#EAF6FC;color:#0F3D57}
+.avisos .on{background:#1B6E9A}
+
+header{background:#1C2541;color:#fff;border-bottom:0}
+.marca b{color:#fff;font-family:'Nunito Sans',sans-serif;font-weight:800}
+.marca small{color:#B9C3DA}
+.sub h1{font-family:'Inter';color:#7CC6EA}
+.sub .yo{color:#C9D2E4}
+.top a{color:#fff;background:rgba(255,255,255,.14)}
+.salir{color:#C9D2E4}
+.tabs{background:rgba(255,255,255,.10)}
+.tabs button{color:#C9D2E4}
+.tabs button.on{background:#fff;color:#1C2541}
+.hero h2,.paso h3,.ok-scr h2,.resumen b{font-family:'Nunito Sans',sans-serif;font-weight:800}
+.big{background:#1B6E9A;color:#fff}
+.gal{color:#1B6E9A;border-bottom-color:#44A02C}
+.btn{background:#1B6E9A!important;color:#fff!important}
+.btn:disabled{background:#DCE3E8!important;color:#9AA8B3!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="marca"><img class="logo" src="logo-blanco.png" alt=""><div><b>Mantenimiento</b><small>Colegio Ibn Gabirol</small></div></div>
+    <a id="lnkPanel" href="#" hidden>Panel →</a>
+  </div>
+  <div class="sub"><span class="yo" id="yo"></span><button class="salir" id="bSalir" hidden onclick="salir()">Salir</button></div>
+  <div class="tabs">
+    <button id="tRep" class="on" onclick="tab('rep')">📷 Reportar</button>
+    <button id="tMis" onclick="tab('mis')">🔔 Mis avisos</button>
+  </div>
+</header>
+<div id="avisos" class="avisos" hidden></div>
+<main id="app"><div class="cargando">Cargando…</div></main>
+<div class="barra" id="barra" hidden><div class="in"><small id="falta"></small><button class="btn" id="enviar" onclick="enviar()">Enviar a mantenimiento</button></div></div>
+
+<input type="file" id="fCam" accept="image/*" capture="environment" onchange="foto(this)">
+<input type="file" id="fGal" accept="image/*" onchange="foto(this)">
+
+<script src="app.js?v=23"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ZONA_IC = { 'Infantil': '🧸', 'Primaria': '✏️', 'ESO': '📘', 'Bachillerato': '🎓', 'Biblioteca y comunes': '📚', 'Despachos': '🗂️', 'Deporte y comedor': '🏀', 'Exterior y otros': '🌳' };
+const IMP = [
+  { ic: '🙂', d: 'Se puede seguir, pero hay que arreglarlo', bg: 'var(--medio)', bg2: 'var(--suave)' },
+  { ic: '⚠️', d: 'No se puede usar el espacio', bg: 'var(--ambar)', bg2: 'var(--ambar2)' },
+  { ic: '🚨', d: 'Peligro para alumnos o personal', bg: 'var(--rojo)', bg2: 'var(--rojo2)' },
+];
+const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.8"/></svg>';
+const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const S = { init: null, tab: 'rep', foto: null, mini: null, zona: null, espacio: null, tipo: null, impacto: null, nota: '', grabando: false, enviando: false, hecho: null, error: '' };
+
+const call = api;
+
+async function arrancar() {
+  try { S.init = await call('getInit'); }
+  catch (e) {
+    if (e instanceof LoginNeeded) { document.querySelector('.tabs').hidden = true; return pantallaLogin($('#app')); }
+    $('#app').innerHTML = '<div class="err">' + esc(e.message || e) + '</div>'; return;
+  }
+  const u = S.init.user;
+  $('#yo').textContent = 'Hola, ' + u.nombre + ' · ' + (u.area || u.rol);
+  const p = params();
+  if (u.rol === 'Mantenimiento' && !p.rep && !p.espacio) return location.replace('panel.html');
+  if (u.vePanel || u.edita) { const a = $('#lnkPanel'); a.hidden = false; a.href = 'panel.html'; }
+  $('#bSalir').hidden = MOCK_MODE;
+  barraAvisos();
+  if (p.espacio) {
+    const z = S.init.zonas.find(z => z.espacios.includes(p.espacio));
+    if (z) { S.zona = z.zona; S.espacio = p.espacio; S.fijo = true; }
+  }
+  if (p.tab === 'mis') return tab('mis');
+  render();
+}
+
+function tab(t) {
+  S.tab = t;
+  $('#tRep').classList.toggle('on', t === 'rep');
+  $('#tMis').classList.toggle('on', t === 'mis');
+  window.scrollTo(0, 0);
+  t === 'mis' ? cargarMis() : render();
+}
+
+/* ---------- Foto ---------- */
+async function foto(input) {
+  const f = input.files && input.files[0];
+  input.value = '';
+  if (!f) return;
+  S.tab = 'rep'; $('#tRep').classList.add('on'); $('#tMis').classList.remove('on');
+  $('#app').innerHTML = '<div class="cargando">Preparando foto…</div>';
+  try {
+    const url = URL.createObjectURL(f);
+    const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
+    S.foto = escalar(img, 1600, .8);
+    S.mini = escalar(img, 320, .6);
+    URL.revokeObjectURL(url);
+    S.error = '';
+  } catch (e) { S.error = 'No he podido leer la foto. Prueba otra vez.'; }
+  S.hecho = null;
+  render();
+}
+function escalar(img, max, q) {
+  const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', q);
+}
+
+/* ---------- Pantalla reportar ---------- */
+function render() {
+  if (S.tab !== 'rep') return;
+  const app = $('#app'), I = S.init;
+  if (S.hecho) {
+    $('#barra').hidden = true;
+    app.innerHTML = `<div class="ok-scr"><div class="tick">${TICK}</div><h2>¡Enviada!</h2>
+      <p><span class="id">${esc(S.hecho)}</span><br>Mantenimiento ya tiene el aviso.<br>Te llegará un correo con el plazo de arreglo.</p>
+      <button class="btn" onclick="nueva()">📷 Reportar otra</button></div>`;
+    return;
+  }
+  if (!S.foto) {
+    $('#barra').hidden = true;
+    app.innerHTML = (S.error ? `<div class="err">${esc(S.error)}</div>` : '') +
+      `<div class="hero">
+        ${S.espacio ? `<div class="pin">📍 ${esc(S.espacio)}</div><br>` : ''}
+        <div class="kicker">Mantenimiento</div>
+        <h2>Haz la foto.<br>Describe qué le pasa.</h2>
+        <label class="big" for="fCam">${CAM}Hacer foto</label>
+        <label class="gal" for="fGal">o elegir de la galería</label>
+      </div>
+      <div class="pasos3"><div><b>📍</b>Dónde</div><div><b>🔧</b>Qué pasa</div><div><b>🚦</b>Cuánto afecta</div></div>`;
+    return;
+  }
+  const z = I.zonas.find(x => x.zona === S.zona);
+  const ok = k => S[k] ? ' ok' : '';
+  const hechos = ['espacio', 'tipo', 'impacto'].map(k => S[k] ? ' class="on"' : '');
+  app.innerHTML = `
+    <div class="foto"><img src="${S.foto}" alt="Foto de la incidencia"><span class="ok">✓ Foto lista</span><label for="fCam">↺ Repetir</label></div>
+    <div class="progreso"><i${hechos[0]}></i><i${hechos[1]}></i><i${hechos[2]}></i></div>
+
+    <div class="paso${ok('espacio')}" id="pDonde"><h3><span class="n">${S.espacio ? '✓' : '1'}</span>¿Dónde?</h3>
+      <div class="tiles zonas">${I.zonas.map(x => `<button class="tile${x.zona === S.zona ? ' on' : ''}" onclick="set('zona',${q(x.zona)})"><span class="ic">${ZONA_IC[x.zona] || '📍'}</span>${esc(x.zona)}</button>`).join('')}</div>
+      ${z ? `<div class="chips" id="pEsp">${z.espacios.map(e => `<button class="chip${e === S.espacio ? ' on' : ''}" onclick="set('espacio',${q(e)})">${esc(e)}</button>`).join('')}</div>` : ''}
+    </div>
+
+    <div class="paso${ok('tipo')}" id="pTipo"><h3><span class="n">${S.tipo ? '✓' : '2'}</span>¿Qué pasa?</h3>
+      <div class="tiles t3">${I.tipos.map(t => `<button class="tile${t.nombre === S.tipo ? ' on' : ''}" onclick="set('tipo',${q(t.nombre)})"><span class="ic">${esc(t.icono)}</span>${esc(t.nombre)}</button>`).join('')}</div>
+    </div>
+
+    <div class="paso${ok('impacto')}" id="pImp"><h3><span class="n">${S.impacto ? '✓' : '3'}</span>¿Cuánto afecta?</h3>
+      <div class="imp">${I.impactos.map((m, i) => { const st = IMP[Math.min(i, 2)], on = m === S.impacto;
+        return `<button class="impc${on ? ' on' : ''}" style="${on ? `background:${st.bg};border-color:${st.bg}` : ''}" onclick="set('impacto',${q(m)})">
+          <span class="ic" style="background:${on ? 'rgba(255,255,255,.22)' : st.bg2}">${st.ic}</span><span><b>${esc(m)}</b><small>${st.d}</small></span></button>`; }).join('')}</div>
+    </div>
+
+    <div class="paso${notaOk() ? ' ok' : ''}" id="pNota"><h3><span class="n">${notaOk() ? '✓' : '4'}</span>¿Qué le pasa? Describe</h3>
+      <textarea id="nota" placeholder="Ej.: el enchufe de la pared del fondo no funciona y huele a quemado" oninput="S.nota=this.value;barra();marcaNota()">${esc(S.nota)}</textarea>
+      ${VOZ ? `<button type="button" class="voz${S.grabando ? ' rec' : ''}" id="bVoz" onclick="grabar()">${S.grabando ? '⏹ Parar grabación' : '🎤 Grabar con la voz'}</button>` : ''}
+      <p class="nota-ayuda">${VOZ ? 'Escríbelo o pulsa «Grabar» y dilo en voz alta: se convierte en texto.' : 'Escríbelo o usa el micrófono 🎤 del teclado para dictarlo.'}</p>
+    </div>`;
+  barra();
+}
+
+/* ---------- Descripción por voz (se transcribe a texto) ---------- */
+const VOZ = window.SpeechRecognition || window.webkitSpeechRecognition;
+const NOTA_MIN = 10;
+const notaOk = () => S.nota.trim().length >= NOTA_MIN;
+let reco = null;
+
+function marcaNota() {
+  const p = $('#pNota'); if (!p) return;
+  p.classList.toggle('ok', notaOk());
+  p.querySelector('.n').textContent = notaOk() ? '✓' : '4';
+}
+
+function grabar() {
+  if (S.grabando) { reco && reco.stop(); return; }
+  reco = new VOZ();
+  reco.lang = 'es-ES';
+  reco.continuous = true;
+  reco.interimResults = true;
+  const base = S.nota.trim() ? S.nota.trim() + ' ' : '';
+  let fijo = '';
+  reco.onresult = e => {
+    let prov = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) fijo += t; else prov += t;
+    }
+    S.nota = (base + fijo + prov).replace(/\s+/g, ' ');
+    const n = $('#nota'); if (n) n.value = S.nota;
+    barra(); marcaNota();
+  };
+  reco.onerror = e => {
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') alert('No hay permiso para usar el micrófono. Actívalo en los ajustes del navegador o escribe la descripción.');
+  };
+  reco.onend = () => { S.grabando = false; reco = null; render(); };
+  try { reco.start(); S.grabando = true; render(); }
+  catch (e) { S.grabando = false; alert('No se ha podido empezar a grabar. Escribe la descripción.'); }
+}
+function q(s) { return esc(JSON.stringify(s)); }
+
+function set(k, v) {
+  S[k] = v;
+  if (k === 'zona') S.espacio = null;
+  render();
+  const sig = { zona: '#pEsp', espacio: '#pTipo', tipo: '#pImp' }[k];
+  const el = sig && $(sig);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: k === 'zona' ? 'center' : 'start' });
+}
+
+function barra() {
+  const falta = [];
+  if (!S.espacio) falta.push('dónde');
+  if (!S.tipo) falta.push('qué pasa');
+  if (!S.impacto) falta.push('cuánto afecta');
+  if (!notaOk()) falta.push('describe qué le pasa');
+  $('#barra').hidden = false;
+  $('#falta').textContent = falta.length ? 'Falta: ' + falta.join(' · ') : '📍 ' + S.espacio + ' · ' + S.tipo;
+  const b = $('#enviar');
+  b.disabled = !!falta.length || S.enviando;
+  b.textContent = S.enviando ? 'Enviando…' : 'Enviar a mantenimiento →';
+}
+
+async function enviar() {
+  if (reco) reco.stop();
+  if (!notaOk()) { barra(); return; }
+  S.enviando = true; barra();
+  try {
+    const id = await call('crearIncidencia', { zona: S.zona, espacio: S.espacio, tipo: S.tipo, impacto: S.impacto, nota: S.nota, foto: S.foto, mini: S.mini });
+    S.hecho = id;
+    window.scrollTo(0, 0);
+  } catch (e) { alert('No se ha podido enviar: ' + (e.message || e)); }
+  S.enviando = false;
+  render();
+}
+
+function nueva() {
+  Object.assign(S, { foto: null, mini: null, tipo: null, impacto: null, nota: '', grabando: false, hecho: null, error: '' });
+  if (!S.fijo) { S.zona = null; S.espacio = null; }
+  render();
+  $('#fCam').click();
+}
+
+/* ---------- Mis avisos ---------- */
+async function cargarMis() {
+  $('#barra').hidden = true;
+  $('#app').innerHTML = '<div class="cargando">Cargando…</div>';
+  let l = [];
+  try { l = await call('misIncidencias'); } catch (e) { $('#app').innerHTML = '<div class="err">' + esc(e.message || e) + '</div>'; return; }
+  if (S.tab !== 'mis') return;
+  if (!l.length) { $('#app').innerHTML = '<div class="vacio"><span class="e">📭</span>Aún no has reportado incidencias.</div>'; return; }
+  const ab = l.filter(o => o.Estado !== 'Resuelta' && o.Estado !== 'Descartada').length;
+  const res = l.filter(o => o.Estado === 'Resuelta').length;
+  const venc = l.filter(o => o.Estado !== 'Nueva' && o.Estado !== 'Resuelta' && o.Estado !== 'Descartada' && o.FechaLimite && new Date(o.FechaLimite) < new Date()).length;
+  $('#app').innerHTML = `<div class="resumen"><div><b>${ab}</b><span>Abiertas</span></div><div><b>${res}</b><span>Resueltas</span></div><div><b style="color:${venc ? 'var(--rojo)' : 'inherit'}">${venc}</b><span>Fuera de plazo</span></div></div>` +
+    l.map(o => {
+      const st = estado(o);
+      const tip = (S.init.tipos.find(t => t.nombre === o.Tipo) || {}).icono || '🔧';
+      return `<div class="card" style="--st:${st[2]}">${o.Miniatura ? `<img src="${o.Miniatura}" alt="">` : `<div class="ph">${tip}</div>`}
+        <div><b class="t">${esc(o.Espacio)} · ${esc(o.Tipo)}</b>
+        <div class="meta">${esc(o.ID)} · ${fecha(o.Fecha)} · ${esc(o.Impacto)}</div>
+        <span class="badge ${st[0]}">${esc(st[1])}</span>
+        ${o.Estado !== 'Resuelta' && o.Estado !== 'Descartada' ? `<div class="plz"><span>Plazo</span><b>${esc(o.Plazo || 'Pendiente de valorar')}</b>
+          ${o.FechaLimite ? `<span>Previsto</span><b>${esc(dia(o.FechaLimite))}</b>` : ''}</div>` : ''}
+        ${o.NotaMantenimiento ? `<div class="nm">🛠️ ${esc(o.NotaMantenimiento)}</div>` : ''}</div></div>`;
+    }).join('');
+}
+function estado(o) {
+  if (o.Estado === 'Resuelta') return ['b-ok', '✓ Resuelta ' + fecha(o.FechaResolucion), 'var(--vivo)'];
+  if (o.Estado === 'Descartada') return ['b-gris', 'Descartada', '#ccc'];
+  if (o.Estado === 'Nueva') return ['b-nueva', '🕓 Pendiente de plazo', 'var(--ambar)'];
+  const nom = o.Estado === 'Esperando materiales/MO' ? '📦 Esperando materiales / MO' : '🛠️ En proceso';
+  if (o.FechaLimite && new Date(o.FechaLimite) < new Date()) return ['b-mal', nom + ' · fuera de plazo', 'var(--rojo)'];
+  return ['b-curso', nom, 'var(--azul)'];
+}
+function dia(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'numeric' }) + ', ' + d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
+function fecha(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }) + ' ' + d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
+
+/* ---------- Datos de prueba (solo fuera de Google) ---------- */
+const MOCK = (() => {
+  const zonas = [
+    { zona: 'Infantil', espacios: ['Inf. 1', 'Inf. 2', 'Inf. 3 LAVAN', 'Inf. 3 CAJOL', 'Comedor Infantil', 'Aseos Infantil'] },
+    { zona: 'Primaria', espacios: ['1º EP', '2º EP LAVAN', '2º EP CAJOL', '3º EP LAVAN', '4º EP', '5º EP LAVAN', '6º EP CAJOL'] },
+    { zona: 'ESO', espacios: ['1º ESO', '2º ESO LAVAN', '3º ESO', '4º ESO', 'Sinagoga'] },
+    { zona: 'Bachillerato', espacios: ['1º IB · Aula 1', '2º IB · Aula 1', 'Arte IB', 'Laboratorio'] },
+    { zona: 'Biblioteca y comunes', espacios: ['Biblioteca / Recepción', 'Sala 1', 'Sala de Juntas'] },
+    { zona: 'Despachos', espacios: ['Desp. 5 Luna', 'Desp. 7 Julio'] },
+    { zona: 'Deporte y comedor', espacios: ['Polideportivo', 'Comedor-Grada', 'Cocina'] },
+    { zona: 'Exterior y otros', espacios: ['Patio', 'Entrada / Portería', 'Otro'] },
+  ];
+  const tipos = [['Electricidad / luz', '💡'], ['Fontanería / agua', '🚰'], ['Climatización', '🌡️'], ['Mobiliario', '🪑'], ['Puertas / ventanas / persianas', '🚪'], ['Informática / proyector', '🖥️'], ['Paredes / suelo / pintura', '🧱'], ['Limpieza', '🧹'], ['Seguridad', '🧯'], ['Otro', '🔧']].map(t => ({ nombre: t[0], icono: t[1] }));
+  const mis = [];
+  return {
+    getInit: async () => ({ user: { nombre: 'Flor', area: 'Infantil', rol: 'Coordinación', vePanel: true }, zonas, tipos, impactos: ['Molesta', 'Impide dar clase', 'Riesgo de seguridad'], plazos: [], url: 'Mantenimiento.html' }),
+    crearIncidencia: async d => { await new Promise(r => setTimeout(r, 600)); const id = 'INC-' + String(mis.length + 4).padStart(4, '0'); mis.unshift({ ID: id, Fecha: new Date().toISOString(), Espacio: d.espacio, Tipo: d.tipo, Impacto: d.impacto, Miniatura: d.mini, Estado: 'Nueva' }); return id; },
+    misIncidencias: async () => mis.concat([
+      { ID: 'INC-0002', Fecha: '2026-11-12T10:05:00Z', Espacio: 'Inf. 3 LAVAN', Tipo: 'Electricidad / luz', Impacto: 'Impide dar clase', Estado: 'En curso', Plazo: 'En 48 h', FechaLimite: '2026-11-14T15:00:00Z' },
+      { ID: 'INC-0003', Fecha: '2026-11-10T09:12:00Z', Espacio: 'Inf. 2', Tipo: 'Climatización', Impacto: 'Impide dar clase', Estado: 'Resuelta', FechaResolucion: '2026-11-11T12:00:00Z', NotaMantenimiento: 'Purgado el radiador.' },
+      { ID: 'INC-0001', Fecha: '2026-11-03T08:40:00Z', Espacio: 'Aseos Infantil', Tipo: 'Fontanería / agua', Impacto: 'Molesta', Estado: 'En curso', Plazo: 'Necesita proveedor / presupuesto' }]),
+  };
+})();
+
+arrancar();
+</script>
+</body>
+</html>
