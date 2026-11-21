@@ -82,7 +82,14 @@ input[type=file]{display:none}
 .tile:active{transform:scale(.96)}
 .tile.on{background:var(--oscuro);border-color:var(--oscuro);color:#fff}
 .tiles.zonas .tile{flex-direction:row;justify-content:flex-start;text-align:left;min-height:58px;padding:10px 12px;font-size:14px}
-.tiles.zonas .tile .ic{font-size:24px}
+.tiles.zonas .tile .ic{font-size:24px;display:flex}
+.tiles.zonas .tile .ic svg{width:26px;height:26px;fill:none;stroke:var(--medio);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tiles.zonas .tile.on .ic svg{stroke:currentColor}
+.chip.otro{border:2px dashed var(--borde);color:var(--medio)}
+.chip.otro.on{border-style:solid;color:#fff}
+.otro-in{width:100%;margin-top:10px;border:2px solid var(--medio);border-radius:14px;padding:12px;font-size:16px;font-family:inherit;background:#fff}
+.fm .drv{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--suave);color:var(--oscuro);font-size:12px;font-weight:700}
+.fm .drv span{font-size:26px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding:12px;background:var(--suave);border-radius:16px}
 .chip{border:2px solid transparent;background:#fff;border-radius:99px;padding:10px 15px;font-size:14.5px;font-weight:700;color:var(--texto);min-height:44px}
 .chip.on{background:var(--medio);color:#fff}
@@ -230,32 +237,35 @@ body.arrastrando main{outline:3px dashed var(--medio);outline-offset:-6px;border
 <input type="file" id="fCam" accept="image/*" capture="environment" onchange="foto(this)">
 <input type="file" id="fGal" accept="image/*" multiple onchange="foto(this)">
 
-<script src="app.js?v=24"></script>
+<script src="app.js?v=25"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const ZONA_IC = { 'Infantil': '🧸', 'Primaria': '✏️', 'ESO': '📘', 'Bachillerato': '🎓', 'Biblioteca y comunes': '📚', 'Despachos': '🗂️', 'Deporte y comedor': '🏀', 'Exterior y otros': '🌳' };
+// Iconos de línea (Tabler, MIT) para las zonas de «¿Dónde?»
+const ZONA_SVG = {"Infantil": "<path d=\"M3.5 17.5c5.667 4.667 11.333 4.667 17 0\"/><path d=\"M19 18.5l-2 -8.5l1 -2l2 1l1.5 -1.5l-2.5 -4.5c-5.052 .218 -5.99 3.133 -7 6h-6a3 3 0 0 0 -3 3\"/><path d=\"M5 18.5l2 -9.5\"/><path d=\"M8 20l2 -5h4l2 5\"/>", "Primaria": "<path d=\"M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4\"/><path d=\"M13.5 6.5l4 4\"/>", "ESO": "<path d=\"M5 5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -14\"/><path d=\"M9 5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -14\"/><path d=\"M5 8h4\"/><path d=\"M9 16h4\"/><path d=\"M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041\"/><path d=\"M14 9l4 -1\"/><path d=\"M16 16l3.923 -.98\"/>", "IB": "<path d=\"M22 9l-10 -4l-10 4l10 4l10 -4v6\"/><path d=\"M6 10.6v5.4a6 3 0 0 0 12 0v-5.4\"/>", "Polideportivo": "<path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\"/><path d=\"M5.65 5.65l12.7 12.7\"/><path d=\"M5.65 18.35l12.7 -12.7\"/><path d=\"M12 3a9 9 0 0 0 9 9\"/><path d=\"M3 12a9 9 0 0 1 9 9\"/>", "Cocina y comedor": "<path d=\"M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12m0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3\"/>", "Áreas comunes": "<path d=\"M3 21l18 0\"/><path d=\"M9 8l1 0\"/><path d=\"M9 12l1 0\"/><path d=\"M9 16l1 0\"/><path d=\"M14 8l1 0\"/><path d=\"M14 12l1 0\"/><path d=\"M14 16l1 0\"/><path d=\"M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16\"/>", "Despachos": "<path d=\"M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9\"/><path d=\"M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2\"/><path d=\"M12 12l0 .01\"/><path d=\"M3 13a20 20 0 0 0 18 0\"/>", "Exterior y patios": "<path d=\"M16 5l3 3l-2 1l4 4l-3 1l4 4h-9\"/><path d=\"M15 21l0 -3\"/><path d=\"M8 13l-2 -2\"/><path d=\"M8 12l2 -2\"/><path d=\"M8 21v-13\"/><path d=\"M5.824 16a3 3 0 0 1 -2.743 -3.69a3 3 0 0 1 .304 -4.833a3 3 0 0 1 4.615 -3.707a3 3 0 0 1 4.614 3.707a3 3 0 0 1 .305 4.833a3 3 0 0 1 -2.919 3.695h-4l-.176 -.005\"/>", "General": "<path d=\"M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/><path d=\"M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/><path d=\"M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/><path d=\"M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/>", "_": "<path d=\"M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0\"/><path d=\"M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0\"/>", "_otro": "<path d=\"M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4\"/><path d=\"M13.5 6.5l4 4\"/><path d=\"M16 19h6\"/><path d=\"M19 16v6\"/>"};
+const zonaIc = z => '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ZONA_SVG[z] || ZONA_SVG._) + '</svg>';
 // Prioridad (solo reparaciones): mismo orden que en la planilla
 const PRI = {
   '🔴 Riesgo de seguridad': { ic: '🔴', d: 'Peligro para alumnos o personal', bg: 'var(--rojo)', bg2: 'var(--rojo2)' },
-  '⚠️ Impide dar clase': { ic: '⚠️', d: 'No se puede usar el espacio', bg: 'var(--ambar)', bg2: 'var(--ambar2)' },
+  '🟠 Impide usar el espacio': { ic: '🟠', d: 'No se puede dar clase, cocinar, usar la biblioteca…', bg: '#E07B2E', bg2: '#FCE9DA' },
+  '🟡 Puede empeorar / rotura mayor': { ic: '🟡', d: 'Si no se arregla pronto, se puede romper más', bg: 'var(--ambar)', bg2: 'var(--ambar2)' },
   '🟢 Puede esperar': { ic: '🟢', d: 'Se puede seguir usando, pero hay que arreglarlo', bg: 'var(--vivo)', bg2: '#E6F4E1' },
 };
 const LIMP = {
-  'Incidencia': { ic: '🧽', d: 'Algo sucio o falta material (jabón, papel…)' },
+  'Incidencia': { ic: '🧽', d: 'Algo sucio o falta material de higiene (jabón, papel…)' },
   'Pedido especial': { ic: '🗓️', d: 'Limpieza de armarios, limpieza especial por una actividad…' },
 };
 const AVISOS_DEF = [
   { id: 'Reparación', icono: '🛠️', titulo: 'Algo está roto o no funciona', desc: 'Averías, roturas, cosas que no funcionan' },
-  { id: 'Limpieza', icono: '🧹', titulo: 'Limpieza o falta material', desc: 'Algo sucio, falta jabón o papel, limpieza especial' },
+  { id: 'Limpieza', icono: '🧹', titulo: 'Limpieza o falta de material de higiene', desc: 'Algo sucio, falta jabón, papel higiénico o de manos, limpieza especial' },
   { id: 'Necesidad', icono: '📅', titulo: 'Necesito algo para una fecha', desc: 'Mesas, montajes, preparar un espacio (con 24 h de antelación)' },
 ];
 const AV_IC = { 'Reparación': '🛠️', 'Limpieza': '🧹', 'Necesidad': '📅', 'Mejora': '💡' };
 const MAX_FOTOS = 3;
 const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.8"/></svg>';
 const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-const VACIO = { aviso: null, fotos: [], tipo: null, impacto: null, recurrente: false, tipoLimpieza: null, paraCuando: '', nota: '', grabando: false, hecho: null, error: '' };
-const S = Object.assign({ init: null, tab: 'rep', zona: null, espacio: null, enviando: false }, VACIO, { fotos: [] });
+const VACIO = { aviso: null, fotos: [], tipo: null, tipoOtro: '', impacto: null, recurrente: null, tipoLimpieza: null, paraCuando: '', nota: '', grabando: false, hecho: null, error: '' };
+const S = Object.assign({ init: null, tab: 'rep', zona: null, espacio: null, espOtro: false, enviando: false }, VACIO, { fotos: [] });
 
 const call = api;
 const avisos = () => (S.init && S.init.avisos) || AVISOS_DEF;
@@ -331,7 +341,14 @@ document.addEventListener('drop', e => {
   document.body.classList.remove('arrastrando');
   if (S.tab !== 'rep' || !S.aviso) return;
   e.preventDefault();
-  anadirFotos([...(e.dataTransfer ? e.dataTransfer.files : [])]);
+  const dt = e.dataTransfer, fs = [...(dt ? dt.files : [])];
+  if (fs.length) return anadirFotos(fs);
+  // Arrastrada desde Google Drive (web): llega un enlace, no el archivo
+  const txt = dt ? (dt.getData('text/uri-list') || dt.getData('text/plain') || '') : '';
+  const ids = [...new Set([...txt.matchAll(/(?:\/d\/|[?&]id=)([\w-]{20,})/g)].map(m => m[1]))].slice(0, MAX_FOTOS - S.fotos.length);
+  if (!ids.length) { if (txt) alert('Eso no parece una foto. Arrastra la imagen o un archivo de Google Drive.'); return; }
+  ids.forEach(id => S.fotos.push({ drive: id }));
+  S.hecho = null; render();
 });
 
 /* ---------- Pantalla reportar ---------- */
@@ -366,24 +383,29 @@ function render() {
 
   // Fotos
   h += `<div class="paso${ok(S.fotos.length)}" id="pFoto"><h3>${n(S.fotos.length, i++)}Foto${fotoObl ? '' : ' <small class="opc">(opcional)</small>'}</h3>
-    <div class="fotos">${S.fotos.map((f, k) => `<div class="fm"><img src="${f.mini}" alt=""><button onclick="quitarFoto(${k})" aria-label="Quitar foto">✕</button></div>`).join('')}
+    <div class="fotos">${S.fotos.map((f, k) => `<div class="fm">${f.drive ? '<div class="drv"><span>📎</span>Foto de Drive</div>' : `<img src="${f.mini}" alt="">`}<button onclick="quitarFoto(${k})" aria-label="Quitar foto">✕</button></div>`).join('')}
     ${S.fotos.length < MAX_FOTOS ? `<label class="fadd" for="fCam">${CAM}<span>Hacer foto</span></label><label class="fadd" for="fGal">🖼️<span>Galería</span></label>` : ''}</div>
-    <p class="nota-ayuda">${S.fotos.length ? S.fotos.length + ' de ' + MAX_FOTOS + ' fotos. ' : 'Hasta ' + MAX_FOTOS + ' fotos. '}${esEscritorio() ? 'En el ordenador también puedes pegarla (Ctrl+V) o arrastrarla aquí.' : ''}</p></div>`;
+    <p class="nota-ayuda">${S.fotos.length ? S.fotos.length + ' de ' + MAX_FOTOS + ' fotos. ' : 'Hasta ' + MAX_FOTOS + ' fotos. '}${esEscritorio() ? 'En el ordenador también puedes pegarla (Ctrl+V) o arrastrarla aquí, desde una carpeta o desde Google Drive.' : ''}</p></div>`;
 
   // Dónde
   h += `<div class="paso${ok(S.espacio)}" id="pDonde"><h3>${n(S.espacio, i++)}¿Dónde?</h3>
-      <div class="tiles zonas">${I.zonas.map(x => `<button class="tile${x.zona === S.zona ? ' on' : ''}" onclick="set('zona',${q(x.zona)})"><span class="ic">${ZONA_IC[x.zona] || '📍'}</span>${esc(x.zona)}</button>`).join('')}</div>
-      ${z ? `<div class="chips" id="pEsp">${z.espacios.map(e => `<button class="chip${e === S.espacio ? ' on' : ''}" onclick="set('espacio',${q(e)})">${esc(e)}</button>`).join('')}</div>` : ''}
+      <div class="tiles zonas">${I.zonas.map(x => `<button class="tile${x.zona === S.zona ? ' on' : ''}" onclick="set('zona',${q(x.zona)})"><span class="ic">${zonaIc(x.zona)}</span>${esc(x.zona)}</button>`).join('')}</div>
+      ${z ? `<div class="chips" id="pEsp">${z.espacios.map(e => `<button class="chip${e === S.espacio && !S.espOtro ? ' on' : ''}" onclick="set('espacio',${q(e)})">${esc(e)}</button>`).join('')}<button class="chip otro${S.espOtro ? ' on' : ''}" onclick="espacioOtro()">✏️ Otro…</button>
+        ${S.espOtro ? `<input class="otro-in" id="espOtro" placeholder="Escribe el lugar: ej. pasillo junto al ascensor" value="${esc(S.espacio || '')}" oninput="S.espacio=this.value.trim();barra()" onchange="render()">` : ''}</div>` : ''}
     </div>`;
 
   if (S.aviso === 'Reparación') {
     h += `<div class="paso${ok(S.tipo)}" id="pTipo"><h3>${n(S.tipo, i++)}¿Qué pasa?</h3>
-      <div class="tiles t3">${I.tipos.map(t => `<button class="tile${t.nombre === S.tipo ? ' on' : ''}" onclick="set('tipo',${q(t.nombre)})"><span class="ic">${esc(t.icono)}</span>${esc(t.nombre)}</button>`).join('')}</div></div>
+      <div class="tiles t3">${I.tipos.map(t => `<button class="tile${t.nombre === S.tipo ? ' on' : ''}" onclick="set('tipo',${q(t.nombre)})"><span class="ic">${esc(t.icono)}</span>${esc(t.nombre)}</button>`).join('')}</div>
+      ${S.tipo === 'Otro' ? `<input class="otro-in" id="tipoOtro" placeholder="¿Qué es? Ej.: ascensor, alarma, cerradura…" value="${esc(S.tipoOtro)}" oninput="S.tipoOtro=this.value;barra()" onchange="render()">` : ''}</div>
       <div class="paso${ok(S.impacto)}" id="pImp"><h3>${n(S.impacto, i++)}Prioridad</h3>
       <div class="imp">${prioridades().map(m => { const st = PRI[m] || { ic: '•', d: '', bg: 'var(--medio)', bg2: 'var(--suave)' }, on = m === S.impacto;
         return `<button class="impc${on ? ' on' : ''}" style="${on ? `background:${st.bg};border-color:${st.bg}` : ''}" onclick="set('impacto',${q(m)})">
           <span class="ic" style="background:${on ? 'rgba(255,255,255,.22)' : st.bg2}">${st.ic}</span><span><b>${esc(m.replace(/^\S+\s/, ''))}</b><small>${st.d}</small></span></button>`; }).join('')}</div>
-      <label class="check"><input type="checkbox" ${S.recurrente ? 'checked' : ''} onchange="S.recurrente=this.checked"> <span><b>Es recurrente</b><small>Ya ha pasado otras veces</small></span></label></div>`;
+      </div>
+      <div class="paso${ok(S.recurrente !== null)}" id="pRec"><h3>${n(S.recurrente !== null, i++)}¿Ya ha pasado antes? <small class="opc">(opcional)</small></h3>
+      <div class="tiles">${[[true, '🔁', 'Sí, se repite'], [false, '1️⃣', 'No, es la primera vez']].map(([v, ic, t]) =>
+        `<button class="tile${S.recurrente === v ? ' on' : ''}" onclick="set('recurrente',${v})"><span class="ic">${ic}</span>${t}</button>`).join('')}</div></div>`;
   }
   if (S.aviso === 'Limpieza') {
     h += `<div class="paso${ok(S.tipoLimpieza)}" id="pTipo"><h3>${n(S.tipoLimpieza, i++)}¿Qué necesitas?</h3>
@@ -398,7 +420,7 @@ function render() {
       <p class="nota-ayuda${poco ? ' aviso24' : ''}">${poco ? '⚠️ Falta menos de 24 h. Lo intentaremos, pero si es urgente avisa también en persona.' : 'Pídelo con al menos 24 h de antelación (salvo urgencias).'}</p></div>`;
   }
   const notaN = i++;
-  const ph = { 'Reparación': S.tipo === 'Otro' ? 'Explica qué es: es obligatorio cuando eliges «Otro»' : 'Ej.: el enchufe de la pared del fondo no funciona y huele a quemado',
+  const ph = { 'Reparación': 'Ej.: el enchufe de la pared del fondo no funciona y huele a quemado',
     'Limpieza': S.tipoLimpieza === 'Pedido especial' ? 'Ej.: limpiar los armarios del fondo antes del viernes' : 'Ej.: no hay jabón ni papel en el baño de la 1ª planta',
     'Necesidad': 'Ej.: 4 mesas y 20 sillas en el polideportivo para la reunión de padres', 'Mejora': 'Describe la idea y qué mejoraría' }[S.aviso] || '';
   h += `<div class="paso${notaOk() ? ' ok' : ''}" id="pNota"><h3><span class="n">${notaOk() ? '✓' : notaN}</span>${S.aviso === 'Mejora' ? 'Tu propuesta' : S.aviso === 'Necesidad' ? '¿Qué necesitas?' : 'Describe qué pasa'}</h3>
@@ -453,21 +475,28 @@ function q(s) { return esc(JSON.stringify(s)); }
 
 function set(k, v) {
   S[k] = v;
-  if (k === 'zona') S.espacio = null;
+  if (k === 'zona') { S.espacio = null; S.espOtro = false; }
+  if (k === 'espacio') S.espOtro = false;
   render();
-  const sig = { zona: '#pEsp', espacio: S.aviso === 'Reparación' || S.aviso === 'Limpieza' ? '#pTipo' : S.aviso === 'Necesidad' ? '#pCuando' : '#pNota', tipo: '#pImp', impacto: '#pNota', tipoLimpieza: '#pNota' }[k];
+  const sig = { zona: '#pEsp', espacio: S.aviso === 'Reparación' || S.aviso === 'Limpieza' ? '#pTipo' : S.aviso === 'Necesidad' ? '#pCuando' : '#pNota', tipo: S.tipo === 'Otro' ? '#tipoOtro' : '#pImp', impacto: '#pRec', recurrente: '#pNota', tipoLimpieza: '#pNota' }[k];
   const el = sig && $(sig);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: k === 'zona' ? 'center' : 'start' });
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: k === 'zona' || sig === '#tipoOtro' ? 'center' : 'start' }); if (el.tagName === 'INPUT') el.focus(); }
+}
+function espacioOtro() {
+  S.espOtro = true; S.espacio = '';
+  render();
+  const el = $('#espOtro'); if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
 }
 
 function faltan() {
   const f = [];
   if (S.aviso === 'Reparación' && !S.fotos.length) f.push('foto');
   if (!S.espacio) f.push('dónde');
-  if (S.aviso === 'Reparación') { if (!S.tipo) f.push('qué pasa'); if (!S.impacto) f.push('prioridad'); }
+  if (S.espOtro && S.espacio && S.espacio.length < 3) f.push('dónde (escribe el lugar)');
+  if (S.aviso === 'Reparación') { if (!S.tipo) f.push('qué pasa'); else if (S.tipo === 'Otro' && S.tipoOtro.trim().length < 3) f.push('escribe qué es («Otro»)'); if (!S.impacto) f.push('prioridad'); }
   if (S.aviso === 'Limpieza' && !S.tipoLimpieza) f.push('incidencia o pedido especial');
   if (S.aviso === 'Necesidad' && !S.paraCuando) f.push('para cuándo');
-  if (!notaOk()) f.push(S.aviso === 'Reparación' && S.tipo === 'Otro' ? 'explica qué es (has elegido «Otro»)' : 'descripción');
+  if (!notaOk()) f.push('descripción');
   return f;
 }
 function barra() {
@@ -485,9 +514,9 @@ async function enviar() {
   S.enviando = true; barra();
   try {
     const id = await call('crearIncidencia', {
-      aviso: S.aviso, zona: S.zona, espacio: S.espacio, categoria: S.tipo, prioridad: S.impacto, recurrente: S.recurrente,
+      aviso: S.aviso, zona: S.zona, espacio: S.espacio, categoria: S.tipo === 'Otro' ? (S.tipoOtro.trim() || 'Otro') : S.tipo, prioridad: S.impacto, recurrente: S.recurrente === true,
       tipoLimpieza: S.tipoLimpieza, paraCuando: S.paraCuando ? new Date(S.paraCuando).toISOString() : '', nota: S.nota,
-      fotos: S.fotos.map(f => f.big), mini: S.fotos[0] ? S.fotos[0].mini : '',
+      fotos: S.fotos.map(f => f.drive ? 'drive:' + f.drive : f.big), mini: S.fotos[0] && S.fotos[0].mini ? S.fotos[0].mini : '',
     });
     S.hecho = id;
     window.scrollTo(0, 0);
@@ -499,7 +528,7 @@ async function enviar() {
 // «Hacer otro aviso»: vuelve a la elección de tipo (no abre la cámara directamente)
 function nueva() {
   Object.assign(S, VACIO, { fotos: [] });
-  if (!S.fijo) { S.zona = null; S.espacio = null; }
+  if (!S.fijo) { S.zona = null; S.espacio = null; S.espOtro = false; }
   render();
   window.scrollTo(0, 0);
 }
@@ -547,13 +576,15 @@ const MOCK = (() => {
     { zona: 'Infantil', espacios: ['Inf. 1', 'Inf. 2', 'Inf. 3 LAVAN', 'Inf. 3 CAJOL', 'Comedor Infantil', 'Aseos Infantil'] },
     { zona: 'Primaria', espacios: ['1º EP', '2º EP LAVAN', '2º EP CAJOL', '3º EP LAVAN', '4º EP', '5º EP LAVAN', '6º EP CAJOL'] },
     { zona: 'ESO', espacios: ['1º ESO', '2º ESO LAVAN', '3º ESO', '4º ESO', 'Sinagoga'] },
-    { zona: 'Bachillerato', espacios: ['1º IB · Aula 1', '2º IB · Aula 1', 'Arte IB', 'Laboratorio'] },
-    { zona: 'Biblioteca y comunes', espacios: ['Biblioteca / Recepción', 'Sala 1', 'Sala de Juntas'] },
+    { zona: 'IB', espacios: ['1º IB · Aula 1', '2º IB · Aula 1', 'Arte IB', 'Laboratorio'] },
+    { zona: 'Polideportivo', espacios: ['Polideportivo', 'Maccabi'] },
+    { zona: 'Cocina y comedor', espacios: ['Cocina', 'Comedor', 'Comedor · gradas'] },
+    { zona: 'Áreas comunes', espacios: ['Biblioteca / recepción', 'Sala 1', 'Sala de juntas'] },
     { zona: 'Despachos', espacios: ['Desp. 5 Luna', 'Desp. 7 Julio'] },
-    { zona: 'Deporte y comedor', espacios: ['Polideportivo', 'Comedor-Grada', 'Cocina'] },
-    { zona: 'Exterior y otros', espacios: ['Patio', 'Entrada / Portería', 'Otro'] },
+    { zona: 'Exterior y patios', espacios: ['Patio', 'Entrada / portería'] },
+    { zona: 'General', espacios: ['Todo el colegio', 'Varios espacios'] },
   ];
-  const tipos = [['Electricidad / luz', '💡'], ['Fontanería / agua', '🚰'], ['Climatización', '🌡️'], ['Mobiliario', '🪑'], ['Puertas / ventanas / persianas', '🚪'], ['Informática / proyector', '🖥️'], ['Paredes / suelo / pintura', '🧱'], ['Techo', '🏠'], ['Seguridad', '🧯'], ['Otro', '🔧']].map(t => ({ nombre: t[0], icono: t[1] }));
+  const tipos = [['Electricidad / luz', '💡'], ['Fontanería / agua', '🚰'], ['Climatización', '🌡️'], ['Mobiliario', '🪑'], ['Puertas / ventanas / persianas', '🚪'], ['Informática / proyector', '🖥️'], ['Paredes / suelo / pintura', '🧱'], ['Filtraciones', '💧'], ['Techo', '🏠'], ['Seguridad', '🧯'], ['Otro', '🔧']].map(t => ({ nombre: t[0], icono: t[1] }));
   const mis = [];
   return {
     getInit: async () => ({ user: { nombre: 'Flor', area: 'Infantil', rol: 'Coordinación', vePanel: true }, zonas, tipos,
@@ -561,7 +592,7 @@ const MOCK = (() => {
       prioridades: Object.keys(PRI), plazos: [], url: 'index.html' }),
     crearIncidencia: async d => { await new Promise(r => setTimeout(r, 600)); const id = 'INC-' + String(mis.length + 30).padStart(4, '0'); mis.unshift({ ID: id, Fecha: new Date().toISOString(), Espacio: d.espacio, Tipo: d.categoria || d.aviso, Aviso: d.aviso, Impacto: d.prioridad || d.tipoLimpieza || '', Miniatura: d.mini, Estado: 'Nueva' }); return id; },
     misIncidencias: async () => mis.concat([
-      { ID: 'INC-0022', Fecha: '2026-11-12T10:05:00Z', Espacio: 'Inf. 3 LAVAN', Tipo: 'Electricidad / luz', Aviso: 'Reparación', Impacto: '⚠️ Impide dar clase', Estado: 'En curso', Plazo: 'Nivel 1 (Interno 48hs)' },
+      { ID: 'INC-0022', Fecha: '2026-11-12T10:05:00Z', Espacio: 'Inf. 3 LAVAN', Tipo: 'Electricidad / luz', Aviso: 'Reparación', Impacto: '🟠 Impide usar el espacio', Estado: 'En curso', Plazo: 'Nivel 1 (Interno 48hs)' },
       { ID: 'INC-0021', Fecha: '2026-11-10T09:12:00Z', Espacio: 'Inf. 2', Tipo: 'Limpieza', Aviso: 'Limpieza', Impacto: 'Incidencia', Estado: 'Resuelta', FechaResolucion: '2026-11-11T12:00:00Z' }]),
   };
 })();
