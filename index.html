@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@700;800;900&family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --oscuro:#1C2541;--medio:#1B6E9A;--vivo:#44A02C;--suave:#EAF6FC;--rosa:#EE7A86;
+  --oscuro:#1C2541;--medio:#1A7FB4;--vivo:#40A028;--suave:#E3F3FB;--logo-azul:#30A0D8;--logo-verde:#40A028;--rosa:#EE7A86;
   --texto:#1E2A33;--texto2:#5B6B77;--borde:#DCE3E8;--fondo:#F6F8FA;
   --ambar:#E3A33B;--ambar2:#FDF1DC;--rojo:#D64550;--rojo2:#FCE6E8;--azul2:#E3EEF0;--azul:#2E6670;
   --r:18px;--serif:'Young Serif',Georgia,serif;
@@ -41,7 +41,7 @@ header{position:sticky;top:0;z-index:5;background:#fff;color:var(--texto);paddin
 .sub h1{font-family:'Manrope';font-weight:800;font-size:12px;margin:0;letter-spacing:.14em;text-transform:uppercase;color:var(--medio);flex:none}
 .sub .yo{font-size:12.5px;color:var(--texto2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top a{color:var(--medio);background:var(--suave);font-size:12.5px;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:99px;white-space:nowrap}
-.tabs{display:flex;gap:4px;max-width:560px;margin:10px auto 0;background:#EDF3EF;padding:4px;border-radius:12px}
+.tabs{display:flex;gap:4px;max-width:560px;margin:10px auto 0;background:#EAF4F9;padding:4px;border-radius:12px}
 .tabs button{flex:1;padding:9px;border:0;background:none;font-size:14px;font-weight:700;color:var(--texto2);border-radius:9px}
 .tabs button.on{background:#fff;color:var(--oscuro);box-shadow:0 1px 3px rgba(16,36,29,.12)}
 header::after{content:"";display:block;height:0}
@@ -239,7 +239,7 @@ body.arrastrando main{outline:3px dashed var(--medio);outline-offset:-6px;border
 <input type="file" id="fCam" accept="image/*" capture="environment" onchange="foto(this)">
 <input type="file" id="fGal" accept="image/*" multiple onchange="foto(this)">
 
-<script src="app.js?v=26"></script>
+<script src="app.js?v=27"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -254,9 +254,10 @@ const zonaIc = z => '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ZONA_SVG[z
 // Prioridad (solo reparaciones): mismo orden que en la planilla
 const PRI = {
   '🔴 Riesgo de seguridad': { ic: '🔴', d: 'Peligro para alumnos o personal', bg: 'var(--rojo)', bg2: 'var(--rojo2)' },
-  '🟠 Impide usar el espacio': { ic: '🟠', d: 'No se puede dar clase, cocinar, usar la biblioteca…', bg: '#E07B2E', bg2: '#FCE9DA' },
+  '🟠 Impide usar el espacio o elemento': { ic: '🟠', d: 'No se puede dar clase, cocinar, usar la biblioteca, un equipo…', bg: '#E07B2E', bg2: '#FCE9DA' },
   '🟡 Puede empeorar / rotura mayor': { ic: '🟡', d: 'Si no se arregla pronto, se puede romper más', bg: 'var(--ambar)', bg2: 'var(--ambar2)' },
-  '🟢 Puede esperar': { ic: '🟢', d: 'Se puede seguir usando, pero hay que arreglarlo', bg: 'var(--vivo)', bg2: '#E6F4E1' },
+  '🔵 Molesta': { ic: '🔵', d: 'Se puede usar, pero incomoda en el día a día', bg: '#30A0D8', bg2: '#E3F3FB' },
+  '🟢 A programar': { ic: '🟢', d: 'No afecta el uso: se planifica y se hace', bg: 'var(--vivo)', bg2: '#E8F5E3' },
 };
 const LIMP = {
   'Incidencia': { ic: '🧽', d: 'Algo sucio o falta material de higiene (jabón, papel…)' },
@@ -600,7 +601,7 @@ const MOCK = (() => {
       prioridades: Object.keys(PRI), plazos: [], url: 'index.html' }),
     crearIncidencia: async d => { await new Promise(r => setTimeout(r, 600)); const id = 'INC-' + String(mis.length + 30).padStart(4, '0'); mis.unshift({ ID: id, Fecha: new Date().toISOString(), Espacio: d.espacio, Tipo: d.categoria || d.aviso, Aviso: d.aviso, Impacto: d.prioridad || d.tipoLimpieza || '', Miniatura: d.mini, Estado: 'Nueva' }); return id; },
     misIncidencias: async () => mis.concat([
-      { ID: 'INC-0022', Fecha: '2026-11-12T10:05:00Z', Espacio: 'Inf. 3 LAVAN', Tipo: 'Electricidad / luz', Aviso: 'Reparación', Impacto: '🟠 Impide usar el espacio', Estado: 'En curso', Plazo: 'Nivel 1 (Interno 48hs)' },
+      { ID: 'INC-0022', Fecha: '2026-11-12T10:05:00Z', Espacio: 'Inf. 3 LAVAN', Tipo: 'Electricidad / luz', Aviso: 'Reparación', Impacto: '🟠 Impide usar el espacio o elemento', Estado: 'En curso', Plazo: 'Nivel 1 (Interno 48hs)' },
       { ID: 'INC-0021', Fecha: '2026-11-10T09:12:00Z', Espacio: 'Inf. 2', Tipo: 'Limpieza', Aviso: 'Limpieza', Impacto: 'Incidencia', Estado: 'Resuelta', FechaResolucion: '2026-11-11T12:00:00Z' }]),
   };
 })();
