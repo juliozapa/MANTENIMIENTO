@@ -239,7 +239,7 @@ body.arrastrando main{outline:3px dashed var(--medio);outline-offset:-6px;border
 <input type="file" id="fCam" accept="image/*" capture="environment" onchange="foto(this)">
 <input type="file" id="fGal" accept="image/*" multiple onchange="foto(this)">
 
-<script src="app.js?v=27"></script>
+<script src="app.js?v=28"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -410,8 +410,11 @@ function render() {
       <div class="imp">${prioridades().map(m => { const st = PRI[m] || { ic: '•', d: '', bg: 'var(--medio)', bg2: 'var(--suave)' }, on = m === S.impacto;
         return `<button class="impc${on ? ' on' : ''}" style="${on ? `background:${st.bg};border-color:${st.bg}` : ''}" onclick="set('impacto',${q(m)})">
           <span class="ic" style="background:${on ? 'rgba(255,255,255,.22)' : st.bg2}">${st.ic}</span><span><b>${esc(m.replace(/^\S+\s/, ''))}</b><small>${st.d}</small></span></button>`; }).join('')}</div>
-      </div>
-      <div class="paso${ok(S.recurrente !== null)}" id="pRec"><h3>${n(S.recurrente !== null, i++)}¿Ya ha pasado antes? <small class="opc">(opcional)</small></h3>
+      </div>`;
+  }
+  // «¿Ya ha pasado antes?» en reparaciones y mejoras
+  if (S.aviso === 'Reparación' || S.aviso === 'Mejora') {
+    h += `<div class="paso${ok(S.recurrente !== null)}" id="pRec"><h3>${n(S.recurrente !== null, i++)}¿Ya ha pasado antes? <small class="opc">(opcional)</small></h3>
       <div class="tiles">${[[true, lineIc('_si'), 'Sí, se repite'], [false, lineIc('_no'), 'No, es la primera vez']].map(([v, ic, t]) =>
         `<button class="tile${S.recurrente === v ? ' on' : ''}" onclick="set('recurrente',${v})"><span class="ic">${ic}</span>${t}</button>`).join('')}</div></div>`;
   }
@@ -487,7 +490,7 @@ function set(k, v) {
   if (k === 'zona') { S.espacio = null; S.espOtro = false; }
   if (k === 'espacio') S.espOtro = false;
   render();
-  const sig = { zona: '#pEsp', espacio: S.aviso === 'Reparación' || S.aviso === 'Limpieza' ? '#pTipo' : S.aviso === 'Necesidad' ? '#pCuando' : '#pNota', tipo: S.tipo === 'Otro' ? '#tipoOtro' : '#pImp', impacto: '#pRec', recurrente: '#pNota', tipoLimpieza: '#pNota' }[k];
+  const sig = { zona: '#pEsp', espacio: S.aviso === 'Reparación' || S.aviso === 'Limpieza' ? '#pTipo' : S.aviso === 'Necesidad' ? '#pCuando' : S.aviso === 'Mejora' ? '#pRec' : '#pNota', tipo: S.tipo === 'Otro' ? '#tipoOtro' : '#pImp', impacto: '#pRec', recurrente: '#pNota', tipoLimpieza: '#pNota' }[k];
   const el = sig && $(sig);
   if (el) { el.scrollIntoView({ behavior: 'smooth', block: k === 'zona' || sig === '#tipoOtro' ? 'center' : 'start' }); if (el.tagName === 'INPUT') el.focus(); }
 }
