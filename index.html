@@ -85,6 +85,8 @@ input[type=file]{display:none}
 .tiles.zonas .tile .ic{font-size:24px;display:flex}
 .tiles.zonas .tile .ic svg{width:26px;height:26px;fill:none;stroke:var(--medio);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .tiles.zonas .tile.on .ic svg{stroke:currentColor}
+.tile .ic svg.li{width:30px;height:30px;fill:none;stroke:var(--medio);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tile.on .ic svg.li{stroke:currentColor}
 .chip.otro{border:2px dashed var(--borde);color:var(--medio)}
 .chip.otro.on{border-style:solid;color:#fff}
 .otro-in{width:100%;margin-top:10px;border:2px solid var(--medio);border-radius:14px;padding:12px;font-size:16px;font-family:inherit;background:#fff}
@@ -237,12 +239,17 @@ body.arrastrando main{outline:3px dashed var(--medio);outline-offset:-6px;border
 <input type="file" id="fCam" accept="image/*" capture="environment" onchange="foto(this)">
 <input type="file" id="fGal" accept="image/*" multiple onchange="foto(this)">
 
-<script src="app.js?v=25"></script>
+<script src="app.js?v=26"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Iconos de línea (Tabler, MIT) para las zonas de «¿Dónde?»
 const ZONA_SVG = {"Infantil": "<path d=\"M3.5 17.5c5.667 4.667 11.333 4.667 17 0\"/><path d=\"M19 18.5l-2 -8.5l1 -2l2 1l1.5 -1.5l-2.5 -4.5c-5.052 .218 -5.99 3.133 -7 6h-6a3 3 0 0 0 -3 3\"/><path d=\"M5 18.5l2 -9.5\"/><path d=\"M8 20l2 -5h4l2 5\"/>", "Primaria": "<path d=\"M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4\"/><path d=\"M13.5 6.5l4 4\"/>", "ESO": "<path d=\"M5 5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -14\"/><path d=\"M9 5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -14\"/><path d=\"M5 8h4\"/><path d=\"M9 16h4\"/><path d=\"M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041\"/><path d=\"M14 9l4 -1\"/><path d=\"M16 16l3.923 -.98\"/>", "IB": "<path d=\"M22 9l-10 -4l-10 4l10 4l10 -4v6\"/><path d=\"M6 10.6v5.4a6 3 0 0 0 12 0v-5.4\"/>", "Polideportivo": "<path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\"/><path d=\"M5.65 5.65l12.7 12.7\"/><path d=\"M5.65 18.35l12.7 -12.7\"/><path d=\"M12 3a9 9 0 0 0 9 9\"/><path d=\"M3 12a9 9 0 0 1 9 9\"/>", "Cocina y comedor": "<path d=\"M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12m0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3\"/>", "Áreas comunes": "<path d=\"M3 21l18 0\"/><path d=\"M9 8l1 0\"/><path d=\"M9 12l1 0\"/><path d=\"M9 16l1 0\"/><path d=\"M14 8l1 0\"/><path d=\"M14 12l1 0\"/><path d=\"M14 16l1 0\"/><path d=\"M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16\"/>", "Despachos": "<path d=\"M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9\"/><path d=\"M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2\"/><path d=\"M12 12l0 .01\"/><path d=\"M3 13a20 20 0 0 0 18 0\"/>", "Exterior y patios": "<path d=\"M16 5l3 3l-2 1l4 4l-3 1l4 4h-9\"/><path d=\"M15 21l0 -3\"/><path d=\"M8 13l-2 -2\"/><path d=\"M8 12l2 -2\"/><path d=\"M8 21v-13\"/><path d=\"M5.824 16a3 3 0 0 1 -2.743 -3.69a3 3 0 0 1 .304 -4.833a3 3 0 0 1 4.615 -3.707a3 3 0 0 1 4.614 3.707a3 3 0 0 1 .305 4.833a3 3 0 0 1 -2.919 3.695h-4l-.176 -.005\"/>", "General": "<path d=\"M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/><path d=\"M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/><path d=\"M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/><path d=\"M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\"/>", "_": "<path d=\"M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0\"/><path d=\"M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0\"/>", "_otro": "<path d=\"M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4\"/><path d=\"M13.5 6.5l4 4\"/><path d=\"M16 19h6\"/><path d=\"M19 16v6\"/>"};
+const TIPO_SVG = {"Electricidad / luz": "<path d=\"M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7\"/><path d=\"M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0 -1 3a2 2 0 0 1 -4 0a3.5 3.5 0 0 0 -1 -3\"/><path d=\"M9.7 17l4.6 0\"/>", "Fontanería / agua": "<path d=\"M7.502 19.423c2.602 2.105 6.395 2.105 8.996 0c2.602 -2.105 3.262 -5.708 1.566 -8.546l-4.89 -7.26c-.42 -.625 -1.287 -.803 -1.936 -.397a1.376 1.376 0 0 0 -.41 .397l-4.893 7.26c-1.695 2.838 -1.035 6.441 1.567 8.546\"/>", "Filtraciones": "<path d=\"M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7\"/><path d=\"M11 13v2m0 3v2m4 -5v2m0 3v2\"/>", "Climatización": "<path d=\"M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5\"/><path d=\"M10 9l4 0\"/>", "Mobiliario": "<path d=\"M5 11a2 2 0 0 1 2 2v2h10v-2a2 2 0 1 1 4 0v4a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-4a2 2 0 0 1 2 -2\"/><path d=\"M5 11v-5a3 3 0 0 1 3 -3h8a3 3 0 0 1 3 3v5\"/><path d=\"M6 19v2\"/><path d=\"M18 19v2\"/>", "Puertas / ventanas / persianas": "<path d=\"M14 12v.01\"/><path d=\"M3 21h18\"/><path d=\"M6 21v-16a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v16\"/>", "Informática / proyector": "<path d=\"M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10\"/><path d=\"M7 20h10\"/><path d=\"M9 16v4\"/><path d=\"M15 16v4\"/>", "Paredes / suelo / pintura": "<path d=\"M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12\"/><path d=\"M4 8h16\"/><path d=\"M20 12h-16\"/><path d=\"M4 16h16\"/><path d=\"M9 4v4\"/><path d=\"M14 8v4\"/><path d=\"M8 12v4\"/><path d=\"M16 12v4\"/><path d=\"M11 16v4\"/>", "Techo": "<path d=\"M5 12l-2 0l9 -9l9 9l-2 0\"/><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\"/><path d=\"M10 12h4v4h-4l0 -4\"/>", "Seguridad": "<path d=\"M12 7a4 4 0 0 1 4 4v9a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1v-9a4 4 0 0 1 4 -4\"/><path d=\"M9 16h6\"/><path d=\"M12 7v-3\"/><path d=\"M16 5l-4 -1l4 -1\"/><path d=\"M12 4h-3a3 3 0 0 0 -3 3\"/>", "Otro": "<path d=\"M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\"/><path d=\"M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\"/><path d=\"M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\"/>", "_si": "<path d=\"M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3\"/><path d=\"M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3\"/>", "_no": "<path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\"/><path d=\"M10 10l2 -2v8\"/>"};
+// Icono de línea del tipo de avería (si es un tipo nuevo de la hoja sin dibujo, usa su emoji)
+const tipoIc = t => TIPO_SVG[t.nombre] ? '<svg class="li" viewBox="0 0 24 24" aria-hidden="true">' + TIPO_SVG[t.nombre] + '</svg>' : esc(t.icono);
+const lineIc = k => '<svg class="li" viewBox="0 0 24 24" aria-hidden="true">' + TIPO_SVG[k] + '</svg>';
+const esMant = () => !!(S.init && S.init.user && S.init.user.edita);
 const zonaIc = z => '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ZONA_SVG[z] || ZONA_SVG._) + '</svg>';
 // Prioridad (solo reparaciones): mismo orden que en la planilla
 const PRI = {
@@ -377,7 +384,7 @@ function render() {
   const ok = c => c ? ' ok' : '';
   const n = (c, i) => `<span class="n">${c ? '✓' : i}</span>`;
   let i = 1;
-  const fotoObl = S.aviso === 'Reparación';
+  const fotoObl = S.aviso === 'Reparación' && !esMant();
   let h = `<div class="av-sel"><span>${esc(av.icono)} ${esc(av.titulo)}</span><button onclick="elegirAviso(null)">Cambiar</button></div>`;
   h += (S.error ? `<div class="err">${esc(S.error)}</div>` : '');
 
@@ -388,15 +395,15 @@ function render() {
     <p class="nota-ayuda">${S.fotos.length ? S.fotos.length + ' de ' + MAX_FOTOS + ' fotos. ' : 'Hasta ' + MAX_FOTOS + ' fotos. '}${esEscritorio() ? 'En el ordenador también puedes pegarla (Ctrl+V) o arrastrarla aquí, desde una carpeta o desde Google Drive.' : ''}</p></div>`;
 
   // Dónde
-  h += `<div class="paso${ok(S.espacio)}" id="pDonde"><h3>${n(S.espacio, i++)}¿Dónde?</h3>
+  h += `<div class="paso${ok(S.zona)}" id="pDonde"><h3>${n(S.zona, i++)}¿Dónde?</h3>
       <div class="tiles zonas">${I.zonas.map(x => `<button class="tile${x.zona === S.zona ? ' on' : ''}" onclick="set('zona',${q(x.zona)})"><span class="ic">${zonaIc(x.zona)}</span>${esc(x.zona)}</button>`).join('')}</div>
-      ${z ? `<div class="chips" id="pEsp">${z.espacios.map(e => `<button class="chip${e === S.espacio && !S.espOtro ? ' on' : ''}" onclick="set('espacio',${q(e)})">${esc(e)}</button>`).join('')}<button class="chip otro${S.espOtro ? ' on' : ''}" onclick="espacioOtro()">✏️ Otro…</button>
+      ${z ? `<p class="nota-ayuda" style="margin:12px 2px 0">Lugar concreto <b>(opcional)</b>: si es en toda la zona, no marques ninguno.</p><div class="chips" id="pEsp" style="margin-top:6px">${z.espacios.map(e => `<button class="chip${e === S.espacio && !S.espOtro ? ' on' : ''}" onclick="set('espacio',${q(e)})">${esc(e)}</button>`).join('')}<button class="chip otro${S.espOtro ? ' on' : ''}" onclick="espacioOtro()">✏️ Otro…</button>
         ${S.espOtro ? `<input class="otro-in" id="espOtro" placeholder="Escribe el lugar: ej. pasillo junto al ascensor" value="${esc(S.espacio || '')}" oninput="S.espacio=this.value.trim();barra()" onchange="render()">` : ''}</div>` : ''}
     </div>`;
 
   if (S.aviso === 'Reparación') {
     h += `<div class="paso${ok(S.tipo)}" id="pTipo"><h3>${n(S.tipo, i++)}¿Qué pasa?</h3>
-      <div class="tiles t3">${I.tipos.map(t => `<button class="tile${t.nombre === S.tipo ? ' on' : ''}" onclick="set('tipo',${q(t.nombre)})"><span class="ic">${esc(t.icono)}</span>${esc(t.nombre)}</button>`).join('')}</div>
+      <div class="tiles t3">${I.tipos.map(t => `<button class="tile${t.nombre === S.tipo ? ' on' : ''}" onclick="set('tipo',${q(t.nombre)})"><span class="ic">${tipoIc(t)}</span>${esc(t.nombre)}</button>`).join('')}</div>
       ${S.tipo === 'Otro' ? `<input class="otro-in" id="tipoOtro" placeholder="¿Qué es? Ej.: ascensor, alarma, cerradura…" value="${esc(S.tipoOtro)}" oninput="S.tipoOtro=this.value;barra()" onchange="render()">` : ''}</div>
       <div class="paso${ok(S.impacto)}" id="pImp"><h3>${n(S.impacto, i++)}Prioridad</h3>
       <div class="imp">${prioridades().map(m => { const st = PRI[m] || { ic: '•', d: '', bg: 'var(--medio)', bg2: 'var(--suave)' }, on = m === S.impacto;
@@ -404,7 +411,7 @@ function render() {
           <span class="ic" style="background:${on ? 'rgba(255,255,255,.22)' : st.bg2}">${st.ic}</span><span><b>${esc(m.replace(/^\S+\s/, ''))}</b><small>${st.d}</small></span></button>`; }).join('')}</div>
       </div>
       <div class="paso${ok(S.recurrente !== null)}" id="pRec"><h3>${n(S.recurrente !== null, i++)}¿Ya ha pasado antes? <small class="opc">(opcional)</small></h3>
-      <div class="tiles">${[[true, '🔁', 'Sí, se repite'], [false, '1️⃣', 'No, es la primera vez']].map(([v, ic, t]) =>
+      <div class="tiles">${[[true, lineIc('_si'), 'Sí, se repite'], [false, lineIc('_no'), 'No, es la primera vez']].map(([v, ic, t]) =>
         `<button class="tile${S.recurrente === v ? ' on' : ''}" onclick="set('recurrente',${v})"><span class="ic">${ic}</span>${t}</button>`).join('')}</div></div>`;
   }
   if (S.aviso === 'Limpieza') {
@@ -415,7 +422,7 @@ function render() {
   }
   if (S.aviso === 'Necesidad') {
     const poco = S.paraCuando && new Date(S.paraCuando) - new Date() < 24 * 36e5;
-    h += `<div class="paso${ok(S.paraCuando)}" id="pCuando"><h3>${n(S.paraCuando, i++)}¿Para cuándo?</h3>
+    h += `<div class="paso${ok(S.paraCuando)}" id="pCuando"><h3>${n(S.paraCuando, i++)}¿Para cuándo?${esMant() ? ' <small class="opc">(opcional)</small>' : ''}</h3>
       <input type="datetime-local" class="fecha" value="${esc(S.paraCuando)}" min="${ahoraLocal()}" onchange="S.paraCuando=this.value;render()">
       <p class="nota-ayuda${poco ? ' aviso24' : ''}">${poco ? '⚠️ Falta menos de 24 h. Lo intentaremos, pero si es urgente avisa también en persona.' : 'Pídelo con al menos 24 h de antelación (salvo urgencias).'}</p></div>`;
   }
@@ -474,6 +481,7 @@ function grabar() {
 function q(s) { return esc(JSON.stringify(s)); }
 
 function set(k, v) {
+  if (k === 'espacio' && v === S.espacio && !S.espOtro) v = null;   // volver a tocar = quitar (toda la zona)
   S[k] = v;
   if (k === 'zona') { S.espacio = null; S.espOtro = false; }
   if (k === 'espacio') S.espOtro = false;
@@ -490,19 +498,19 @@ function espacioOtro() {
 
 function faltan() {
   const f = [];
-  if (S.aviso === 'Reparación' && !S.fotos.length) f.push('foto');
-  if (!S.espacio) f.push('dónde');
+  if (S.aviso === 'Reparación' && !S.fotos.length && !esMant()) f.push('foto');
+  if (!S.zona) f.push('dónde');
   if (S.espOtro && S.espacio && S.espacio.length < 3) f.push('dónde (escribe el lugar)');
   if (S.aviso === 'Reparación') { if (!S.tipo) f.push('qué pasa'); else if (S.tipo === 'Otro' && S.tipoOtro.trim().length < 3) f.push('escribe qué es («Otro»)'); if (!S.impacto) f.push('prioridad'); }
   if (S.aviso === 'Limpieza' && !S.tipoLimpieza) f.push('incidencia o pedido especial');
-  if (S.aviso === 'Necesidad' && !S.paraCuando) f.push('para cuándo');
+  if (S.aviso === 'Necesidad' && !S.paraCuando && !esMant()) f.push('para cuándo');
   if (!notaOk()) f.push('descripción');
   return f;
 }
 function barra() {
   const falta = faltan();
   $('#barra').hidden = false;
-  $('#falta').textContent = falta.length ? 'Falta: ' + falta.join(' · ') : (AV_IC[S.aviso] || '') + ' ' + S.aviso + ' · 📍 ' + S.espacio;
+  $('#falta').textContent = falta.length ? 'Falta: ' + falta.join(' · ') : (AV_IC[S.aviso] || '') + ' ' + S.aviso + ' · 📍 ' + (S.espacio || S.zona);
   const b = $('#enviar');
   b.disabled = !!falta.length || S.enviando;
   b.textContent = S.enviando ? 'Enviando…' : 'Enviar a mantenimiento →';
@@ -514,7 +522,7 @@ async function enviar() {
   S.enviando = true; barra();
   try {
     const id = await call('crearIncidencia', {
-      aviso: S.aviso, zona: S.zona, espacio: S.espacio, categoria: S.tipo === 'Otro' ? (S.tipoOtro.trim() || 'Otro') : S.tipo, prioridad: S.impacto, recurrente: S.recurrente === true,
+      aviso: S.aviso, zona: S.zona, espacio: S.espacio || '', categoria: S.tipo === 'Otro' ? (S.tipoOtro.trim() || 'Otro') : S.tipo, prioridad: S.impacto, recurrente: S.recurrente === true,
       tipoLimpieza: S.tipoLimpieza, paraCuando: S.paraCuando ? new Date(S.paraCuando).toISOString() : '', nota: S.nota,
       fotos: S.fotos.map(f => f.drive ? 'drive:' + f.drive : f.big), mini: S.fotos[0] && S.fotos[0].mini ? S.fotos[0].mini : '',
     });
