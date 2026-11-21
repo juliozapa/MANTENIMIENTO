@@ -19,7 +19,7 @@ const APP = {
   // Firebase → Cloud Messaging → Certificados push web
   VAPID: 'BCq8c3l5Hfen333bBKermVGK1ss-JKoPWP_ROnoPicVTyUon2SGYbBaHwx3gaGzRNBqYYc30bGgP6zcDMRqC9BA',
   DOMINIO: 'ibngabirol.com',
-  VER: '28',
+  VER: '29',
 };
 
 const MOCK_MODE = !APP.API || /[?&]mock=1/.test(location.search);

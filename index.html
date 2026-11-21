@@ -40,6 +40,7 @@ header{position:sticky;top:0;z-index:5;background:#fff;color:var(--texto);paddin
 .sub{display:flex;align-items:baseline;gap:8px;max-width:560px;margin:8px auto 0;min-width:0}
 .sub h1{font-family:'Manrope';font-weight:800;font-size:12px;margin:0;letter-spacing:.14em;text-transform:uppercase;color:var(--medio);flex:none}
 .sub .yo{font-size:12.5px;color:var(--texto2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.links{display:flex;gap:6px;flex:none}
 .top a{color:var(--medio);background:var(--suave);font-size:12.5px;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:99px;white-space:nowrap}
 .tabs{display:flex;gap:4px;max-width:560px;margin:10px auto 0;background:#EAF4F9;padding:4px;border-radius:12px}
 .tabs button{flex:1;padding:9px;border:0;background:none;font-size:14px;font-weight:700;color:var(--texto2);border-radius:9px}
@@ -224,7 +225,7 @@ body.arrastrando main{outline:3px dashed var(--medio);outline-offset:-6px;border
 <header>
   <div class="top">
     <div class="marca"><img class="logo" src="logo-blanco.png" alt=""><div><b>Mantenimiento</b><small>Colegio Ibn Gabirol</small></div></div>
-    <a id="lnkPanel" href="#" hidden>Panel →</a>
+    <div class="links"><a id="lnkPanel" href="panel.html" hidden>Panel</a><a id="lnkHoja" href="#" target="_blank" rel="noopener" hidden>Planilla →</a></div>
   </div>
   <div class="sub"><span class="yo" id="yo"></span><button class="salir" id="bSalir" hidden onclick="salir()">Salir</button></div>
   <div class="tabs">
@@ -239,7 +240,7 @@ body.arrastrando main{outline:3px dashed var(--medio);outline-offset:-6px;border
 <input type="file" id="fCam" accept="image/*" capture="environment" onchange="foto(this)">
 <input type="file" id="fGal" accept="image/*" multiple onchange="foto(this)">
 
-<script src="app.js?v=28"></script>
+<script src="app.js?v=29"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -289,7 +290,9 @@ async function arrancar() {
   const u = S.init.user;
   $('#yo').textContent = 'Hola, ' + u.nombre + ' · ' + (u.area || u.rol);
   const p = params();
-  if (u.vePanel || u.edita) { const a = $('#lnkPanel'); a.hidden = false; a.href = S.init.hojaPlanilla || 'panel.html'; a.textContent = S.init.hojaPlanilla ? 'Planilla →' : 'Panel →'; if (S.init.hojaPlanilla) a.target = '_blank'; }
+  // Accesos: «Panel» (todos los avisos, solo lectura) y «Planilla» (gestión, solo mantenimiento)
+  if (u.vePanel || u.edita) $('#lnkPanel').hidden = false;
+  if (S.init.hojaPlanilla) { const a = $('#lnkHoja'); a.hidden = false; a.href = S.init.hojaPlanilla; }
   $('#bSalir').hidden = MOCK_MODE;
   barraAvisos();
   if (p.espacio) {
