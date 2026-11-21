@@ -182,6 +182,33 @@ header{background:#1C2541;color:#fff;border-bottom:0}
 .gal{color:#1B6E9A;border-bottom-color:#44A02C}
 .btn{background:#1B6E9A!important;color:#fff!important}
 .btn:disabled{background:#DCE3E8!important;color:#9AA8B3!important}
+
+/* Tipos de aviso, varias fotos, prioridad y fecha (piloto nov. 2026) */
+.pregunta{font-family:'Nunito Sans',sans-serif;font-weight:800;font-size:22px;margin:4px 2px 14px}
+.avisos-l{display:grid;gap:10px}
+.av{display:flex;align-items:center;gap:14px;background:#fff;border:2px solid var(--borde);border-radius:18px;padding:16px;text-align:left;color:var(--texto);transition:transform .12s,border-color .12s}
+.av:active{transform:scale(.98)}
+.av:hover{border-color:var(--medio)}
+.av .ic{width:52px;height:52px;border-radius:14px;background:var(--suave);display:flex;align-items:center;justify-content:center;font-size:28px;flex:none}
+.av b{display:block;font-size:16.5px}
+.av small{display:block;color:var(--texto2);font-size:13px;margin-top:3px;font-weight:500}
+.av-sel{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--suave);color:var(--oscuro);border-radius:14px;padding:10px 14px;font-weight:800;font-size:15px}
+.av-sel button{border:0;background:#fff;color:var(--medio);border-radius:99px;padding:7px 12px;font-weight:700;font-size:13px}
+.opc{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--texto2)}
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.fm{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--oscuro)}
+.fm img{width:100%;height:100%;object-fit:cover;display:block}
+.fm button{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:14px}
+.fadd{aspect-ratio:1;border:2px dashed var(--borde);border-radius:14px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--medio);font-weight:700;font-size:13px;cursor:pointer;font-size:26px}
+.fadd span{font-size:13px}
+.fadd svg{width:30px;height:30px}
+body.arrastrando main{outline:3px dashed var(--medio);outline-offset:-6px;border-radius:20px}
+.check{display:flex;align-items:center;gap:12px;margin-top:12px;background:#fff;border:2px solid var(--borde);border-radius:16px;padding:12px 14px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--medio)}
+.check b{display:block;font-size:15px}
+.check small{display:block;color:var(--texto2);font-size:12.5px;font-weight:500}
+.fecha{width:100%;border:2px solid var(--borde);border-radius:16px;padding:12px;font-size:16px;font-family:inherit;background:#fff}
+.aviso24{color:#9a6512!important}
 </style>
 </head>
 <body>
@@ -201,23 +228,39 @@ header{background:#1C2541;color:#fff;border-bottom:0}
 <div class="barra" id="barra" hidden><div class="in"><small id="falta"></small><button class="btn" id="enviar" onclick="enviar()">Enviar a mantenimiento</button></div></div>
 
 <input type="file" id="fCam" accept="image/*" capture="environment" onchange="foto(this)">
-<input type="file" id="fGal" accept="image/*" onchange="foto(this)">
+<input type="file" id="fGal" accept="image/*" multiple onchange="foto(this)">
 
-<script src="app.js?v=23"></script>
+<script src="app.js?v=24"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ZONA_IC = { 'Infantil': '🧸', 'Primaria': '✏️', 'ESO': '📘', 'Bachillerato': '🎓', 'Biblioteca y comunes': '📚', 'Despachos': '🗂️', 'Deporte y comedor': '🏀', 'Exterior y otros': '🌳' };
-const IMP = [
-  { ic: '🙂', d: 'Se puede seguir, pero hay que arreglarlo', bg: 'var(--medio)', bg2: 'var(--suave)' },
-  { ic: '⚠️', d: 'No se puede usar el espacio', bg: 'var(--ambar)', bg2: 'var(--ambar2)' },
-  { ic: '🚨', d: 'Peligro para alumnos o personal', bg: 'var(--rojo)', bg2: 'var(--rojo2)' },
+// Prioridad (solo reparaciones): mismo orden que en la planilla
+const PRI = {
+  '🔴 Riesgo de seguridad': { ic: '🔴', d: 'Peligro para alumnos o personal', bg: 'var(--rojo)', bg2: 'var(--rojo2)' },
+  '⚠️ Impide dar clase': { ic: '⚠️', d: 'No se puede usar el espacio', bg: 'var(--ambar)', bg2: 'var(--ambar2)' },
+  '🟢 Puede esperar': { ic: '🟢', d: 'Se puede seguir usando, pero hay que arreglarlo', bg: 'var(--vivo)', bg2: '#E6F4E1' },
+};
+const LIMP = {
+  'Incidencia': { ic: '🧽', d: 'Algo sucio o falta material (jabón, papel…)' },
+  'Pedido especial': { ic: '🗓️', d: 'Limpieza de armarios, limpieza especial por una actividad…' },
+};
+const AVISOS_DEF = [
+  { id: 'Reparación', icono: '🛠️', titulo: 'Algo está roto o no funciona', desc: 'Averías, roturas, cosas que no funcionan' },
+  { id: 'Limpieza', icono: '🧹', titulo: 'Limpieza o falta material', desc: 'Algo sucio, falta jabón o papel, limpieza especial' },
+  { id: 'Necesidad', icono: '📅', titulo: 'Necesito algo para una fecha', desc: 'Mesas, montajes, preparar un espacio (con 24 h de antelación)' },
 ];
+const AV_IC = { 'Reparación': '🛠️', 'Limpieza': '🧹', 'Necesidad': '📅', 'Mejora': '💡' };
+const MAX_FOTOS = 3;
 const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.8"/></svg>';
 const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-const S = { init: null, tab: 'rep', foto: null, mini: null, zona: null, espacio: null, tipo: null, impacto: null, nota: '', grabando: false, enviando: false, hecho: null, error: '' };
+const VACIO = { aviso: null, fotos: [], tipo: null, impacto: null, recurrente: false, tipoLimpieza: null, paraCuando: '', nota: '', grabando: false, hecho: null, error: '' };
+const S = Object.assign({ init: null, tab: 'rep', zona: null, espacio: null, enviando: false }, VACIO, { fotos: [] });
 
 const call = api;
+const avisos = () => (S.init && S.init.avisos) || AVISOS_DEF;
+const prioridades = () => (S.init && S.init.prioridades) || Object.keys(PRI);
+const esEscritorio = () => matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 async function arrancar() {
   try { S.init = await call('getInit'); }
@@ -228,8 +271,7 @@ async function arrancar() {
   const u = S.init.user;
   $('#yo').textContent = 'Hola, ' + u.nombre + ' · ' + (u.area || u.rol);
   const p = params();
-  if (u.rol === 'Mantenimiento' && !p.rep && !p.espacio) return location.replace('panel.html');
-  if (u.vePanel || u.edita) { const a = $('#lnkPanel'); a.hidden = false; a.href = 'panel.html'; }
+  if (u.vePanel || u.edita) { const a = $('#lnkPanel'); a.hidden = false; a.href = S.init.hojaPlanilla || 'panel.html'; a.textContent = S.init.hojaPlanilla ? 'Planilla →' : 'Panel →'; if (S.init.hojaPlanilla) a.target = '_blank'; }
   $('#bSalir').hidden = MOCK_MODE;
   barraAvisos();
   if (p.espacio) {
@@ -248,24 +290,28 @@ function tab(t) {
   t === 'mis' ? cargarMis() : render();
 }
 
-/* ---------- Foto ---------- */
+/* ---------- Fotos (hasta 3): cámara, galería, pegar o arrastrar ---------- */
 async function foto(input) {
-  const f = input.files && input.files[0];
+  const files = [...(input.files || [])];
   input.value = '';
-  if (!f) return;
-  S.tab = 'rep'; $('#tRep').classList.add('on'); $('#tMis').classList.remove('on');
-  $('#app').innerHTML = '<div class="cargando">Preparando foto…</div>';
-  try {
-    const url = URL.createObjectURL(f);
-    const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
-    S.foto = escalar(img, 1600, .8);
-    S.mini = escalar(img, 320, .6);
-    URL.revokeObjectURL(url);
-    S.error = '';
-  } catch (e) { S.error = 'No he podido leer la foto. Prueba otra vez.'; }
+  await anadirFotos(files);
+}
+async function anadirFotos(files) {
+  files = files.filter(f => f && /^image\//.test(f.type)).slice(0, MAX_FOTOS - S.fotos.length);
+  if (!files.length) { if (S.fotos.length >= MAX_FOTOS) alert('Máximo ' + MAX_FOTOS + ' fotos por aviso.'); return; }
+  S.error = '';
+  for (const f of files) {
+    try {
+      const url = URL.createObjectURL(f);
+      const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
+      S.fotos.push({ big: escalar(img, 1400, .78), mini: escalar(img, 320, .6) });
+      URL.revokeObjectURL(url);
+    } catch (e) { S.error = 'No he podido leer una de las fotos. Prueba otra vez.'; }
+  }
   S.hecho = null;
   render();
 }
+function quitarFoto(i) { S.fotos.splice(i, 1); render(); }
 function escalar(img, max, q) {
   const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
   const c = document.createElement('canvas');
@@ -273,6 +319,20 @@ function escalar(img, max, q) {
   c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
   return c.toDataURL('image/jpeg', q);
 }
+// En el ordenador: pegar (Ctrl+V) o arrastrar una imagen a la página
+document.addEventListener('paste', e => {
+  if (S.tab !== 'rep' || !S.aviso || S.hecho) return;
+  const fs = [...(e.clipboardData ? e.clipboardData.items : [])].filter(i => i.kind === 'file').map(i => i.getAsFile());
+  if (fs.length) { e.preventDefault(); anadirFotos(fs); }
+});
+document.addEventListener('dragover', e => { if (S.tab === 'rep' && S.aviso) { e.preventDefault(); document.body.classList.add('arrastrando'); } });
+document.addEventListener('dragleave', e => { if (!e.relatedTarget) document.body.classList.remove('arrastrando'); });
+document.addEventListener('drop', e => {
+  document.body.classList.remove('arrastrando');
+  if (S.tab !== 'rep' || !S.aviso) return;
+  e.preventDefault();
+  anadirFotos([...(e.dataTransfer ? e.dataTransfer.files : [])]);
+});
 
 /* ---------- Pantalla reportar ---------- */
 function render() {
@@ -280,53 +340,77 @@ function render() {
   const app = $('#app'), I = S.init;
   if (S.hecho) {
     $('#barra').hidden = true;
-    app.innerHTML = `<div class="ok-scr"><div class="tick">${TICK}</div><h2>¡Enviada!</h2>
-      <p><span class="id">${esc(S.hecho)}</span><br>Mantenimiento ya tiene el aviso.<br>Te llegará un correo con el plazo de arreglo.</p>
-      <button class="btn" onclick="nueva()">📷 Reportar otra</button></div>`;
+    app.innerHTML = `<div class="ok-scr"><div class="tick">${TICK}</div><h2>¡Enviado!</h2>
+      <p><span class="id">${esc(S.hecho)}</span><br>Mantenimiento ya tiene el aviso.<br>Puedes seguirlo en «Mis avisos».</p>
+      <button class="btn" onclick="nueva()">➕ Hacer otro aviso</button></div>`;
     return;
   }
-  if (!S.foto) {
+  // Paso 0: qué quieres avisar
+  if (!S.aviso) {
     $('#barra').hidden = true;
     app.innerHTML = (S.error ? `<div class="err">${esc(S.error)}</div>` : '') +
-      `<div class="hero">
-        ${S.espacio ? `<div class="pin">📍 ${esc(S.espacio)}</div><br>` : ''}
-        <div class="kicker">Mantenimiento</div>
-        <h2>Haz la foto.<br>Describe qué le pasa.</h2>
-        <label class="big" for="fCam">${CAM}Hacer foto</label>
-        <label class="gal" for="fGal">o elegir de la galería</label>
-      </div>
-      <div class="pasos3"><div><b>📍</b>Dónde</div><div><b>🔧</b>Qué pasa</div><div><b>🚦</b>Cuánto afecta</div></div>`;
+      `${S.espacio && S.fijo ? `<div class="pin">📍 ${esc(S.espacio)}</div>` : ''}
+      <h2 class="pregunta">¿Qué quieres avisar?</h2>
+      <div class="avisos-l">${avisos().map(a => `<button class="av" onclick="elegirAviso(${q(a.id)})"><span class="ic">${esc(a.icono)}</span>
+        <span><b>${esc(a.titulo)}</b><small>${esc(a.desc)}</small></span></button>`).join('')}</div>`;
     return;
   }
+  const av = avisos().find(a => a.id === S.aviso) || { icono: AV_IC[S.aviso], titulo: S.aviso };
   const z = I.zonas.find(x => x.zona === S.zona);
-  const ok = k => S[k] ? ' ok' : '';
-  const hechos = ['espacio', 'tipo', 'impacto'].map(k => S[k] ? ' class="on"' : '');
-  app.innerHTML = `
-    <div class="foto"><img src="${S.foto}" alt="Foto de la incidencia"><span class="ok">✓ Foto lista</span><label for="fCam">↺ Repetir</label></div>
-    <div class="progreso"><i${hechos[0]}></i><i${hechos[1]}></i><i${hechos[2]}></i></div>
+  const ok = c => c ? ' ok' : '';
+  const n = (c, i) => `<span class="n">${c ? '✓' : i}</span>`;
+  let i = 1;
+  const fotoObl = S.aviso === 'Reparación';
+  let h = `<div class="av-sel"><span>${esc(av.icono)} ${esc(av.titulo)}</span><button onclick="elegirAviso(null)">Cambiar</button></div>`;
+  h += (S.error ? `<div class="err">${esc(S.error)}</div>` : '');
 
-    <div class="paso${ok('espacio')}" id="pDonde"><h3><span class="n">${S.espacio ? '✓' : '1'}</span>¿Dónde?</h3>
+  // Fotos
+  h += `<div class="paso${ok(S.fotos.length)}" id="pFoto"><h3>${n(S.fotos.length, i++)}Foto${fotoObl ? '' : ' <small class="opc">(opcional)</small>'}</h3>
+    <div class="fotos">${S.fotos.map((f, k) => `<div class="fm"><img src="${f.mini}" alt=""><button onclick="quitarFoto(${k})" aria-label="Quitar foto">✕</button></div>`).join('')}
+    ${S.fotos.length < MAX_FOTOS ? `<label class="fadd" for="fCam">${CAM}<span>Hacer foto</span></label><label class="fadd" for="fGal">🖼️<span>Galería</span></label>` : ''}</div>
+    <p class="nota-ayuda">${S.fotos.length ? S.fotos.length + ' de ' + MAX_FOTOS + ' fotos. ' : 'Hasta ' + MAX_FOTOS + ' fotos. '}${esEscritorio() ? 'En el ordenador también puedes pegarla (Ctrl+V) o arrastrarla aquí.' : ''}</p></div>`;
+
+  // Dónde
+  h += `<div class="paso${ok(S.espacio)}" id="pDonde"><h3>${n(S.espacio, i++)}¿Dónde?</h3>
       <div class="tiles zonas">${I.zonas.map(x => `<button class="tile${x.zona === S.zona ? ' on' : ''}" onclick="set('zona',${q(x.zona)})"><span class="ic">${ZONA_IC[x.zona] || '📍'}</span>${esc(x.zona)}</button>`).join('')}</div>
       ${z ? `<div class="chips" id="pEsp">${z.espacios.map(e => `<button class="chip${e === S.espacio ? ' on' : ''}" onclick="set('espacio',${q(e)})">${esc(e)}</button>`).join('')}</div>` : ''}
-    </div>
+    </div>`;
 
-    <div class="paso${ok('tipo')}" id="pTipo"><h3><span class="n">${S.tipo ? '✓' : '2'}</span>¿Qué pasa?</h3>
-      <div class="tiles t3">${I.tipos.map(t => `<button class="tile${t.nombre === S.tipo ? ' on' : ''}" onclick="set('tipo',${q(t.nombre)})"><span class="ic">${esc(t.icono)}</span>${esc(t.nombre)}</button>`).join('')}</div>
-    </div>
-
-    <div class="paso${ok('impacto')}" id="pImp"><h3><span class="n">${S.impacto ? '✓' : '3'}</span>¿Cuánto afecta?</h3>
-      <div class="imp">${I.impactos.map((m, i) => { const st = IMP[Math.min(i, 2)], on = m === S.impacto;
+  if (S.aviso === 'Reparación') {
+    h += `<div class="paso${ok(S.tipo)}" id="pTipo"><h3>${n(S.tipo, i++)}¿Qué pasa?</h3>
+      <div class="tiles t3">${I.tipos.map(t => `<button class="tile${t.nombre === S.tipo ? ' on' : ''}" onclick="set('tipo',${q(t.nombre)})"><span class="ic">${esc(t.icono)}</span>${esc(t.nombre)}</button>`).join('')}</div></div>
+      <div class="paso${ok(S.impacto)}" id="pImp"><h3>${n(S.impacto, i++)}Prioridad</h3>
+      <div class="imp">${prioridades().map(m => { const st = PRI[m] || { ic: '•', d: '', bg: 'var(--medio)', bg2: 'var(--suave)' }, on = m === S.impacto;
         return `<button class="impc${on ? ' on' : ''}" style="${on ? `background:${st.bg};border-color:${st.bg}` : ''}" onclick="set('impacto',${q(m)})">
-          <span class="ic" style="background:${on ? 'rgba(255,255,255,.22)' : st.bg2}">${st.ic}</span><span><b>${esc(m)}</b><small>${st.d}</small></span></button>`; }).join('')}</div>
-    </div>
-
-    <div class="paso${notaOk() ? ' ok' : ''}" id="pNota"><h3><span class="n">${notaOk() ? '✓' : '4'}</span>¿Qué le pasa? Describe</h3>
-      <textarea id="nota" placeholder="Ej.: el enchufe de la pared del fondo no funciona y huele a quemado" oninput="S.nota=this.value;barra();marcaNota()">${esc(S.nota)}</textarea>
+          <span class="ic" style="background:${on ? 'rgba(255,255,255,.22)' : st.bg2}">${st.ic}</span><span><b>${esc(m.replace(/^\S+\s/, ''))}</b><small>${st.d}</small></span></button>`; }).join('')}</div>
+      <label class="check"><input type="checkbox" ${S.recurrente ? 'checked' : ''} onchange="S.recurrente=this.checked"> <span><b>Es recurrente</b><small>Ya ha pasado otras veces</small></span></label></div>`;
+  }
+  if (S.aviso === 'Limpieza') {
+    h += `<div class="paso${ok(S.tipoLimpieza)}" id="pTipo"><h3>${n(S.tipoLimpieza, i++)}¿Qué necesitas?</h3>
+      <div class="imp">${Object.keys(LIMP).map(m => { const on = m === S.tipoLimpieza;
+        return `<button class="impc${on ? ' on' : ''}" style="${on ? 'background:var(--medio);border-color:var(--medio)' : ''}" onclick="set('tipoLimpieza',${q(m)})">
+          <span class="ic" style="background:${on ? 'rgba(255,255,255,.22)' : 'var(--suave)'}">${LIMP[m].ic}</span><span><b>${esc(m)}</b><small>${LIMP[m].d}</small></span></button>`; }).join('')}</div></div>`;
+  }
+  if (S.aviso === 'Necesidad') {
+    const poco = S.paraCuando && new Date(S.paraCuando) - new Date() < 24 * 36e5;
+    h += `<div class="paso${ok(S.paraCuando)}" id="pCuando"><h3>${n(S.paraCuando, i++)}¿Para cuándo?</h3>
+      <input type="datetime-local" class="fecha" value="${esc(S.paraCuando)}" min="${ahoraLocal()}" onchange="S.paraCuando=this.value;render()">
+      <p class="nota-ayuda${poco ? ' aviso24' : ''}">${poco ? '⚠️ Falta menos de 24 h. Lo intentaremos, pero si es urgente avisa también en persona.' : 'Pídelo con al menos 24 h de antelación (salvo urgencias).'}</p></div>`;
+  }
+  const notaN = i++;
+  const ph = { 'Reparación': S.tipo === 'Otro' ? 'Explica qué es: es obligatorio cuando eliges «Otro»' : 'Ej.: el enchufe de la pared del fondo no funciona y huele a quemado',
+    'Limpieza': S.tipoLimpieza === 'Pedido especial' ? 'Ej.: limpiar los armarios del fondo antes del viernes' : 'Ej.: no hay jabón ni papel en el baño de la 1ª planta',
+    'Necesidad': 'Ej.: 4 mesas y 20 sillas en el polideportivo para la reunión de padres', 'Mejora': 'Describe la idea y qué mejoraría' }[S.aviso] || '';
+  h += `<div class="paso${notaOk() ? ' ok' : ''}" id="pNota"><h3><span class="n">${notaOk() ? '✓' : notaN}</span>${S.aviso === 'Mejora' ? 'Tu propuesta' : S.aviso === 'Necesidad' ? '¿Qué necesitas?' : 'Describe qué pasa'}</h3>
+      <textarea id="nota" placeholder="${esc(ph)}" oninput="S.nota=this.value;barra();marcaNota()">${esc(S.nota)}</textarea>
       ${VOZ ? `<button type="button" class="voz${S.grabando ? ' rec' : ''}" id="bVoz" onclick="grabar()">${S.grabando ? '⏹ Parar grabación' : '🎤 Grabar con la voz'}</button>` : ''}
       <p class="nota-ayuda">${VOZ ? 'Escríbelo o pulsa «Grabar» y dilo en voz alta: se convierte en texto.' : 'Escríbelo o usa el micrófono 🎤 del teclado para dictarlo.'}</p>
     </div>`;
+  app.innerHTML = h;
   barra();
 }
+function ahoraLocal() { const d = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4); return d.toISOString().slice(0, 16); }
+function elegirAviso(a) { S.aviso = a; S.error = ''; render(); window.scrollTo(0, 0); }
 
 /* ---------- Descripción por voz (se transcribe a texto) ---------- */
 const VOZ = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -337,7 +421,7 @@ let reco = null;
 function marcaNota() {
   const p = $('#pNota'); if (!p) return;
   p.classList.toggle('ok', notaOk());
-  p.querySelector('.n').textContent = notaOk() ? '✓' : '4';
+  if (notaOk()) p.querySelector('.n').textContent = '✓';
 }
 
 function grabar() {
@@ -371,19 +455,25 @@ function set(k, v) {
   S[k] = v;
   if (k === 'zona') S.espacio = null;
   render();
-  const sig = { zona: '#pEsp', espacio: '#pTipo', tipo: '#pImp' }[k];
+  const sig = { zona: '#pEsp', espacio: S.aviso === 'Reparación' || S.aviso === 'Limpieza' ? '#pTipo' : S.aviso === 'Necesidad' ? '#pCuando' : '#pNota', tipo: '#pImp', impacto: '#pNota', tipoLimpieza: '#pNota' }[k];
   const el = sig && $(sig);
   if (el) el.scrollIntoView({ behavior: 'smooth', block: k === 'zona' ? 'center' : 'start' });
 }
 
+function faltan() {
+  const f = [];
+  if (S.aviso === 'Reparación' && !S.fotos.length) f.push('foto');
+  if (!S.espacio) f.push('dónde');
+  if (S.aviso === 'Reparación') { if (!S.tipo) f.push('qué pasa'); if (!S.impacto) f.push('prioridad'); }
+  if (S.aviso === 'Limpieza' && !S.tipoLimpieza) f.push('incidencia o pedido especial');
+  if (S.aviso === 'Necesidad' && !S.paraCuando) f.push('para cuándo');
+  if (!notaOk()) f.push(S.aviso === 'Reparación' && S.tipo === 'Otro' ? 'explica qué es (has elegido «Otro»)' : 'descripción');
+  return f;
+}
 function barra() {
-  const falta = [];
-  if (!S.espacio) falta.push('dónde');
-  if (!S.tipo) falta.push('qué pasa');
-  if (!S.impacto) falta.push('cuánto afecta');
-  if (!notaOk()) falta.push('describe qué le pasa');
+  const falta = faltan();
   $('#barra').hidden = false;
-  $('#falta').textContent = falta.length ? 'Falta: ' + falta.join(' · ') : '📍 ' + S.espacio + ' · ' + S.tipo;
+  $('#falta').textContent = falta.length ? 'Falta: ' + falta.join(' · ') : (AV_IC[S.aviso] || '') + ' ' + S.aviso + ' · 📍 ' + S.espacio;
   const b = $('#enviar');
   b.disabled = !!falta.length || S.enviando;
   b.textContent = S.enviando ? 'Enviando…' : 'Enviar a mantenimiento →';
@@ -391,10 +481,14 @@ function barra() {
 
 async function enviar() {
   if (reco) reco.stop();
-  if (!notaOk()) { barra(); return; }
+  if (faltan().length) { barra(); return; }
   S.enviando = true; barra();
   try {
-    const id = await call('crearIncidencia', { zona: S.zona, espacio: S.espacio, tipo: S.tipo, impacto: S.impacto, nota: S.nota, foto: S.foto, mini: S.mini });
+    const id = await call('crearIncidencia', {
+      aviso: S.aviso, zona: S.zona, espacio: S.espacio, categoria: S.tipo, prioridad: S.impacto, recurrente: S.recurrente,
+      tipoLimpieza: S.tipoLimpieza, paraCuando: S.paraCuando ? new Date(S.paraCuando).toISOString() : '', nota: S.nota,
+      fotos: S.fotos.map(f => f.big), mini: S.fotos[0] ? S.fotos[0].mini : '',
+    });
     S.hecho = id;
     window.scrollTo(0, 0);
   } catch (e) { alert('No se ha podido enviar: ' + (e.message || e)); }
@@ -402,11 +496,12 @@ async function enviar() {
   render();
 }
 
+// «Hacer otro aviso»: vuelve a la elección de tipo (no abre la cámara directamente)
 function nueva() {
-  Object.assign(S, { foto: null, mini: null, tipo: null, impacto: null, nota: '', grabando: false, hecho: null, error: '' });
+  Object.assign(S, VACIO, { fotos: [] });
   if (!S.fijo) { S.zona = null; S.espacio = null; }
   render();
-  $('#fCam').click();
+  window.scrollTo(0, 0);
 }
 
 /* ---------- Mis avisos ---------- */
@@ -416,38 +511,33 @@ async function cargarMis() {
   let l = [];
   try { l = await call('misIncidencias'); } catch (e) { $('#app').innerHTML = '<div class="err">' + esc(e.message || e) + '</div>'; return; }
   if (S.tab !== 'mis') return;
-  if (!l.length) { $('#app').innerHTML = '<div class="vacio"><span class="e">📭</span>Aún no has reportado incidencias.</div>'; return; }
+  if (!l.length) { $('#app').innerHTML = '<div class="vacio"><span class="e">📭</span>Aún no has enviado avisos.</div>'; return; }
   const ab = l.filter(o => o.Estado !== 'Resuelta' && o.Estado !== 'Descartada').length;
   const res = l.filter(o => o.Estado === 'Resuelta').length;
-  const venc = l.filter(o => o.Estado !== 'Nueva' && o.Estado !== 'Resuelta' && o.Estado !== 'Descartada' && o.FechaLimite && new Date(o.FechaLimite) < new Date()).length;
-  $('#app').innerHTML = `<div class="resumen"><div><b>${ab}</b><span>Abiertas</span></div><div><b>${res}</b><span>Resueltas</span></div><div><b style="color:${venc ? 'var(--rojo)' : 'inherit'}">${venc}</b><span>Fuera de plazo</span></div></div>` +
+  const enc = l.filter(o => o.Estado === 'En curso' || o.Estado === 'Esperando materiales/MO').length;
+  $('#app').innerHTML = `<div class="resumen"><div><b>${ab}</b><span>Abiertos</span></div><div><b>${enc}</b><span>En curso</span></div><div><b>${res}</b><span>Resueltos</span></div></div>` +
     l.map(o => {
       const st = estado(o);
-      const tip = (S.init.tipos.find(t => t.nombre === o.Tipo) || {}).icono || '🔧';
+      const tip = AV_IC[o.Aviso] || (S.init.tipos.find(t => t.nombre === o.Tipo) || {}).icono || '🔧';
       return `<div class="card" style="--st:${st[2]}">${o.Miniatura ? `<img src="${o.Miniatura}" alt="">` : `<div class="ph">${tip}</div>`}
         <div><b class="t">${esc(o.Espacio)} · ${esc(o.Tipo)}</b>
-        <div class="meta">${esc(o.ID)} · ${fecha(o.Fecha)} · ${esc(o.Impacto)}</div>
+        <div class="meta">${esc(o.ID)} · ${fecha(o.Fecha)}${o.Impacto ? ' · ' + esc(o.Impacto) : ''}</div>
         <span class="badge ${st[0]}">${esc(st[1])}</span>
-        ${o.Estado !== 'Resuelta' && o.Estado !== 'Descartada' ? `<div class="plz"><span>Plazo</span><b>${esc(o.Plazo || 'Pendiente de valorar')}</b>
-          ${o.FechaLimite ? `<span>Previsto</span><b>${esc(dia(o.FechaLimite))}</b>` : ''}</div>` : ''}
-        ${o.NotaMantenimiento ? `<div class="nm">🛠️ ${esc(o.NotaMantenimiento)}</div>` : ''}</div></div>`;
+        ${o.Estado !== 'Resuelta' && o.Estado !== 'Descartada' && o.Plazo ? `<div class="plz"><span>${o.Aviso === 'Reparación' ? 'Plazo' : 'Estado'}</span><b>${esc(o.Plazo)}</b></div>` : ''}
+        ${o.NotaMantenimiento ? `<div class="nm">${esc(o.NotaMantenimiento)}</div>` : ''}</div></div>`;
     }).join('');
 }
 function estado(o) {
-  if (o.Estado === 'Resuelta') return ['b-ok', '✓ Resuelta ' + fecha(o.FechaResolucion), 'var(--vivo)'];
-  if (o.Estado === 'Descartada') return ['b-gris', 'Descartada', '#ccc'];
-  if (o.Estado === 'Nueva') return ['b-nueva', '🕓 Pendiente de plazo', 'var(--ambar)'];
+  if (o.Estado === 'Resuelta') return ['b-ok', '✓ Resuelto' + (o.FechaResolucion ? ' ' + fecha(o.FechaResolucion) : ''), 'var(--vivo)'];
+  if (o.Estado === 'Descartada') return ['b-gris', 'Descartado', '#ccc'];
+  if (o.Estado === 'Nueva') return ['b-nueva', o.Aviso === 'Reparación' ? '🕓 Pendiente de valorar' : '🕓 Recibido', 'var(--ambar)'];
   const nom = o.Estado === 'Esperando materiales/MO' ? '📦 Esperando materiales / MO' : '🛠️ En proceso';
-  if (o.FechaLimite && new Date(o.FechaLimite) < new Date()) return ['b-mal', nom + ' · fuera de plazo', 'var(--rojo)'];
   return ['b-curso', nom, 'var(--azul)'];
-}
-function dia(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'numeric' }) + ', ' + d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
 function fecha(iso) {
   if (!iso) return '';
   const d = new Date(iso);
+  if (isNaN(d)) return '';
   return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }) + ' ' + d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
 
@@ -463,15 +553,16 @@ const MOCK = (() => {
     { zona: 'Deporte y comedor', espacios: ['Polideportivo', 'Comedor-Grada', 'Cocina'] },
     { zona: 'Exterior y otros', espacios: ['Patio', 'Entrada / Portería', 'Otro'] },
   ];
-  const tipos = [['Electricidad / luz', '💡'], ['Fontanería / agua', '🚰'], ['Climatización', '🌡️'], ['Mobiliario', '🪑'], ['Puertas / ventanas / persianas', '🚪'], ['Informática / proyector', '🖥️'], ['Paredes / suelo / pintura', '🧱'], ['Limpieza', '🧹'], ['Seguridad', '🧯'], ['Otro', '🔧']].map(t => ({ nombre: t[0], icono: t[1] }));
+  const tipos = [['Electricidad / luz', '💡'], ['Fontanería / agua', '🚰'], ['Climatización', '🌡️'], ['Mobiliario', '🪑'], ['Puertas / ventanas / persianas', '🚪'], ['Informática / proyector', '🖥️'], ['Paredes / suelo / pintura', '🧱'], ['Techo', '🏠'], ['Seguridad', '🧯'], ['Otro', '🔧']].map(t => ({ nombre: t[0], icono: t[1] }));
   const mis = [];
   return {
-    getInit: async () => ({ user: { nombre: 'Flor', area: 'Infantil', rol: 'Coordinación', vePanel: true }, zonas, tipos, impactos: ['Molesta', 'Impide dar clase', 'Riesgo de seguridad'], plazos: [], url: 'Mantenimiento.html' }),
-    crearIncidencia: async d => { await new Promise(r => setTimeout(r, 600)); const id = 'INC-' + String(mis.length + 4).padStart(4, '0'); mis.unshift({ ID: id, Fecha: new Date().toISOString(), Espacio: d.espacio, Tipo: d.tipo, Impacto: d.impacto, Miniatura: d.mini, Estado: 'Nueva' }); return id; },
+    getInit: async () => ({ user: { nombre: 'Flor', area: 'Infantil', rol: 'Coordinación', vePanel: true }, zonas, tipos,
+      avisos: AVISOS_DEF.concat([{ id: 'Mejora', icono: '💡', titulo: 'Propuesta de mejora', desc: 'Ideas para mejorar los espacios y el funcionamiento' }]),
+      prioridades: Object.keys(PRI), plazos: [], url: 'index.html' }),
+    crearIncidencia: async d => { await new Promise(r => setTimeout(r, 600)); const id = 'INC-' + String(mis.length + 30).padStart(4, '0'); mis.unshift({ ID: id, Fecha: new Date().toISOString(), Espacio: d.espacio, Tipo: d.categoria || d.aviso, Aviso: d.aviso, Impacto: d.prioridad || d.tipoLimpieza || '', Miniatura: d.mini, Estado: 'Nueva' }); return id; },
     misIncidencias: async () => mis.concat([
-      { ID: 'INC-0002', Fecha: '2026-11-12T10:05:00Z', Espacio: 'Inf. 3 LAVAN', Tipo: 'Electricidad / luz', Impacto: 'Impide dar clase', Estado: 'En curso', Plazo: 'En 48 h', FechaLimite: '2026-11-14T15:00:00Z' },
-      { ID: 'INC-0003', Fecha: '2026-11-10T09:12:00Z', Espacio: 'Inf. 2', Tipo: 'Climatización', Impacto: 'Impide dar clase', Estado: 'Resuelta', FechaResolucion: '2026-11-11T12:00:00Z', NotaMantenimiento: 'Purgado el radiador.' },
-      { ID: 'INC-0001', Fecha: '2026-11-03T08:40:00Z', Espacio: 'Aseos Infantil', Tipo: 'Fontanería / agua', Impacto: 'Molesta', Estado: 'En curso', Plazo: 'Necesita proveedor / presupuesto' }]),
+      { ID: 'INC-0022', Fecha: '2026-11-12T10:05:00Z', Espacio: 'Inf. 3 LAVAN', Tipo: 'Electricidad / luz', Aviso: 'Reparación', Impacto: '⚠️ Impide dar clase', Estado: 'En curso', Plazo: 'Nivel 1 (Interno 48hs)' },
+      { ID: 'INC-0021', Fecha: '2026-11-10T09:12:00Z', Espacio: 'Inf. 2', Tipo: 'Limpieza', Aviso: 'Limpieza', Impacto: 'Incidencia', Estado: 'Resuelta', FechaResolucion: '2026-11-11T12:00:00Z' }]),
   };
 })();
 
