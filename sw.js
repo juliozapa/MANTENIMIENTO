@@ -1,5 +1,5 @@
 /* Service worker: funciona sin conexión (pantallas) y muestra los avisos. */
-const CACHE = 'mant-v30';
+const CACHE = 'mant-v31';
 const SHELL = ['./', 'index.html', 'panel.html', 'app.js', 'logo.png', 'simbolo.png', 'logo-blanco.png', 'logo-color.png', 'icon-192.png', 'manifest.webmanifest'];
 
 self.addEventListener('install', e => {
